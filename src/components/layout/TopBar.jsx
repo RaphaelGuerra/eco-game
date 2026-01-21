@@ -44,7 +44,15 @@ export default function TopBar({
 
         {/* Center section */}
         <div className="flex-1 flex justify-center">
-          {centerContent}
+          {centerContent || (
+            <a
+              href="https://www.itatiaiaresort.com.br/"
+              className="text-sm font-semibold tracking-wide text-gray-700 hover:text-primary-600 transition-colors"
+              aria-label="Itatiaia Resort website"
+            >
+              Itatiaia Resort
+            </a>
+          )}
         </div>
 
         {/* Right section */}

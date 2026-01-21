@@ -53,8 +53,8 @@ export default function SettingsScreen() {
 
   const languages = [
     { code: 'en', label: 'English' },
-    { code: 'es', label: 'Espaol' },
-    { code: 'pt-BR', label: 'Portugues (BR)' },
+    { code: 'es', label: 'Español' },
+    { code: 'pt-BR', label: 'Português (BR)' },
   ]
 
   const themes = [
