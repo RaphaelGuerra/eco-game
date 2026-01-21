@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Snowflake, Heart, Zap, Sparkles } from 'lucide-react'
+import { Snowflake, Heart, Zap, Sparkles, Gem, Package } from 'lucide-react'
+import { cn } from '@/lib/cn'
 import { useUserStore } from '@/stores'
-import { Card, Button } from '@/components/ui'
+import { Card, Button, Badge } from '@/components/ui'
 import { GemCounter, GemPrice } from '@/components/gamification'
 import { TopBar, BottomNav } from '@/components/layout'
 import { AlertModal } from '@/components/ui/Modal'
@@ -114,14 +115,20 @@ export default function ShopScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="flex items-center justify-between bg-gradient-to-r from-amber-50 to-yellow-50">
+          <Card className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-100">
             <div>
               <p className="text-sm text-gray-500">Your Balance</p>
-              <p className="text-3xl font-extrabold text-amber-600">
+              <p className="text-3xl font-extrabold text-cyan-600">
                 {gems.toLocaleString()}
               </p>
             </div>
-            <div className="text-5xl">💎</div>
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg"
+            >
+              <Gem className="w-8 h-8 text-white" />
+            </motion.div>
           </Card>
         </motion.div>
 
@@ -131,7 +138,10 @@ export default function ShopScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <h2 className="text-lg font-bold text-gray-800 mb-3">Power-ups</h2>
+          <div className="flex items-center gap-2 mb-3">
+            <Zap className="w-5 h-5 text-amber-500" />
+            <h2 className="text-lg font-bold text-gray-800">Power-ups</h2>
+          </div>
           <div className="space-y-3">
             {SHOP_ITEMS.filter((item) => item.category === 'power-ups').map(
               (item) => (
@@ -152,19 +162,26 @@ export default function ShopScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-lg font-bold text-gray-800 mb-3">Bundles</h2>
-          <div className="space-y-3">
-            {SHOP_ITEMS.filter((item) => item.category === 'bundles').map(
-              (item) => (
-                <ShopItem
-                  key={item.id}
-                  item={item}
-                  canAfford={canAfford(item.price)}
-                  onPurchase={() => handlePurchase(item)}
-                />
-              )
-            )}
+          <div className="flex items-center gap-2 mb-3">
+            <Package className="w-5 h-5 text-purple-500" />
+            <h2 className="text-lg font-bold text-gray-800">Bundles</h2>
+            <Badge variant="purple" size="xs">Save more</Badge>
           </div>
+          <Card className="bg-gradient-to-br from-purple-50 to-white border border-purple-100 p-0 overflow-hidden">
+            <div className="divide-y divide-purple-100">
+              {SHOP_ITEMS.filter((item) => item.category === 'bundles').map(
+                (item) => (
+                  <ShopItem
+                    key={item.id}
+                    item={item}
+                    canAfford={canAfford(item.price)}
+                    onPurchase={() => handlePurchase(item)}
+                    isBundle
+                  />
+                )
+              )}
+            </div>
+          </Card>
         </motion.div>
 
         {/* Coming Soon */}
@@ -203,22 +220,41 @@ export default function ShopScreen() {
   )
 }
 
-function ShopItem({ item, canAfford, onPurchase }) {
+function ShopItem({ item, canAfford, onPurchase, isBundle }) {
   const Icon = item.icon
 
   return (
-    <Card
-      className={`flex items-center gap-4 ${!canAfford ? 'opacity-60' : ''}`}
+    <div
+      className={cn(
+        'flex items-center gap-4 p-4',
+        !isBundle && 'bg-white rounded-xl shadow-game',
+        !canAfford && 'bg-gray-50'
+      )}
     >
       <div
-        className={`w-12 h-12 rounded-xl ${item.bgColor} flex items-center justify-center`}
+        className={cn(
+          'relative w-12 h-12 rounded-xl flex items-center justify-center',
+          item.bgColor,
+          !canAfford && 'grayscale opacity-70'
+        )}
       >
-        <Icon className={`w-6 h-6 ${item.iconColor}`} />
+        <Icon className={cn('w-6 h-6', item.iconColor)} />
+        {item.quantity && (
+          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center">
+            {item.quantity}
+          </div>
+        )}
       </div>
 
       <div className="flex-1">
-        <h3 className="font-bold text-gray-800">{item.name}</h3>
-        <p className="text-sm text-gray-500">{item.description}</p>
+        <h3 className={cn(
+          'font-bold',
+          canAfford ? 'text-gray-800' : 'text-gray-500'
+        )}>{item.name}</h3>
+        <p className={cn(
+          'text-sm',
+          canAfford ? 'text-gray-500' : 'text-gray-400'
+        )}>{item.description}</p>
       </div>
 
       <Button
@@ -226,9 +262,10 @@ function ShopItem({ item, canAfford, onPurchase }) {
         size="sm"
         disabled={!canAfford}
         onClick={onPurchase}
+        className={!canAfford ? 'cursor-not-allowed' : ''}
       >
         <GemPrice amount={item.price} affordable={canAfford} size="sm" />
       </Button>
-    </Card>
+    </div>
   )
 }

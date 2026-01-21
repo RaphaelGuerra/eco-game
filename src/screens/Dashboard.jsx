@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Compass, ChevronRight } from 'lucide-react'
+import { Compass, ChevronRight, Trophy, BookOpen, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { useUserStore } from '@/stores'
@@ -46,7 +46,7 @@ export default function Dashboard() {
         {/* Streak Warning */}
         <StreakWarning />
 
-        {/* Mascot Section */}
+        {/* Welcome & Mascot Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,14 +78,14 @@ export default function Dashboard() {
           className="grid grid-cols-2 gap-4"
         >
           {/* Daily Goal */}
-          <Card className="flex flex-col items-center justify-center py-4">
+          <Card className="flex flex-col items-center justify-center py-6 min-h-[140px]">
             <DailyGoalRing size="md" showLabel />
           </Card>
 
           {/* Explore Button */}
           <Card
             interactive
-            className="flex flex-col items-center justify-center py-4 bg-gradient-to-br from-primary-50 to-secondary-50"
+            className="flex flex-col items-center justify-center py-6 min-h-[140px] bg-gradient-to-br from-primary-50 to-secondary-50 border border-primary-100"
             onClick={() => navigate('/explore')}
           >
             <motion.div
@@ -98,7 +98,7 @@ export default function Dashboard() {
                 ],
               }}
               transition={{ repeat: Infinity, duration: 2 }}
-              className="w-14 h-14 rounded-full bg-primary-500 flex items-center justify-center mb-2"
+              className="w-14 h-14 rounded-full bg-primary-500 flex items-center justify-center mb-3 shadow-primary"
             >
               <Compass className="w-7 h-7 text-white" />
             </motion.div>
@@ -106,6 +106,9 @@ export default function Dashboard() {
             <span className="text-xs text-gray-500">Discover wildlife</span>
           </Card>
         </motion.div>
+
+        {/* Section Divider */}
+        <div className="border-t border-gray-100" />
 
         {/* Continue Learning */}
         <motion.div
@@ -120,7 +123,7 @@ export default function Dashboard() {
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-secondary-100 flex items-center justify-center">
-                <span className="text-2xl">📚</span>
+                <BookOpen className="w-6 h-6 text-secondary-600" />
               </div>
               <div>
                 <h3 className="font-bold text-gray-800">Continue Learning</h3>
@@ -133,6 +136,9 @@ export default function Dashboard() {
           </Card>
         </motion.div>
 
+        {/* Section Divider */}
+        <div className="border-t border-gray-100" />
+
         {/* Quick Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -141,17 +147,23 @@ export default function Dashboard() {
           className="grid grid-cols-3 gap-3"
         >
           <QuickActionCard
-            emoji="🏆"
+            icon={Trophy}
+            iconColor="text-amber-500"
+            iconBg="bg-amber-50"
             label="Leaderboard"
             onClick={() => navigate('/leaderboard')}
           />
           <QuickActionCard
-            emoji="📖"
+            icon={BookOpen}
+            iconColor="text-primary-500"
+            iconBg="bg-primary-50"
             label="Collection"
             onClick={() => navigate('/collection')}
           />
           <QuickActionCard
-            emoji="⚙️"
+            icon={Settings}
+            iconColor="text-gray-500"
+            iconBg="bg-gray-100"
             label="Settings"
             onClick={() => navigate('/settings')}
           />
@@ -163,15 +175,16 @@ export default function Dashboard() {
   )
 }
 
-function QuickActionCard({ emoji, label, onClick }) {
+function QuickActionCard({ icon: Icon, iconColor, iconBg, label, onClick }) {
   return (
     <Card
       interactive
-      padding="sm"
-      className="flex flex-col items-center py-3"
+      className="flex flex-col items-center p-4"
       onClick={onClick}
     >
-      <span className="text-2xl mb-1">{emoji}</span>
+      <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center mb-2', iconBg)}>
+        <Icon className={cn('w-5 h-5', iconColor)} />
+      </div>
       <span className="text-xs font-medium text-gray-600">{label}</span>
     </Card>
   )

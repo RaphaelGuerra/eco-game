@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Library, HelpCircle } from 'lucide-react'
 import { useDiscoveryStore } from '@/stores'
 import { Card } from '@/components/ui'
 import { RarityBadge } from '@/components/ui/Badge'
@@ -41,21 +42,25 @@ export default function CollectionScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="text-center bg-gradient-to-r from-primary-50 to-secondary-50">
-            <div className="text-4xl mb-2">📚</div>
+          <Card className="text-center bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-100">
+            <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-white/60 flex items-center justify-center shadow-sm">
+              <Library className="w-8 h-8 text-primary-600" />
+            </div>
             <h2 className="text-2xl font-extrabold text-gray-800">
               {discoveredCount} / {totalCount}
             </h2>
             <p className="text-gray-500">Species Discovered</p>
-            
+
             {/* Progress bar */}
-            <div className="mt-4 h-3 bg-white/50 rounded-full overflow-hidden">
+            <div className="mt-4 h-3 bg-white/50 rounded-full overflow-hidden shadow-inner">
               <motion.div
-                className="h-full bg-gradient-to-r from-primary-400 to-secondary-500 rounded-full"
+                className="h-full bg-gradient-to-r from-primary-400 to-secondary-500 rounded-full relative overflow-hidden"
                 initial={{ width: 0 }}
                 animate={{ width: `${completionPercentage}%` }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-              />
+              >
+                <div className="absolute inset-0 progress-shimmer" />
+              </motion.div>
             </div>
             <p className="text-sm text-gray-500 mt-2">
               {completionPercentage}% complete
@@ -96,11 +101,18 @@ export default function CollectionScreen() {
         >
           <Card>
             <h3 className="font-bold text-gray-800 mb-3">Rarity Guide</h3>
-            <div className="flex flex-wrap gap-2">
-              <RarityBadge rarity="common" />
-              <RarityBadge rarity="uncommon" />
-              <RarityBadge rarity="rare" />
-              <RarityBadge rarity="legendary" />
+            <div className="space-y-2">
+              {[
+                { rarity: 'common', count: ALL_SPECIES.filter(s => s.rarity === 'common').length },
+                { rarity: 'uncommon', count: ALL_SPECIES.filter(s => s.rarity === 'uncommon').length },
+                { rarity: 'rare', count: ALL_SPECIES.filter(s => s.rarity === 'rare').length },
+                { rarity: 'legendary', count: ALL_SPECIES.filter(s => s.rarity === 'legendary').length },
+              ].map(({ rarity, count }) => (
+                <div key={rarity} className="flex items-center justify-between">
+                  <RarityBadge rarity={rarity} />
+                  <span className="text-sm text-gray-500">{count} species</span>
+                </div>
+              ))}
             </div>
           </Card>
         </motion.div>
@@ -114,13 +126,16 @@ export default function CollectionScreen() {
 function SpeciesCard({ species, discovered }) {
   return (
     <Card
-      className={`text-center ${!discovered ? 'opacity-50' : ''}`}
-      padding="sm"
+      className={`text-center ${!discovered ? 'bg-gray-50 grayscale' : ''}`}
     >
-      <div className="text-4xl mb-2">
-        {discovered ? species.emoji : '❓'}
+      <div className={`text-4xl mb-2 ${!discovered ? 'opacity-40' : ''}`}>
+        {discovered ? species.emoji : (
+          <div className="w-10 h-10 mx-auto rounded-full bg-gray-200 flex items-center justify-center">
+            <HelpCircle className="w-5 h-5 text-gray-400" />
+          </div>
+        )}
       </div>
-      <h3 className="font-bold text-gray-800 text-sm truncate">
+      <h3 className="font-bold text-gray-800 text-sm line-clamp-2 min-h-[2.5rem]">
         {discovered ? species.name : '???'}
       </h3>
       <div className="mt-2">

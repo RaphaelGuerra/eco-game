@@ -8,6 +8,7 @@ const variants = {
   outlined: 'bg-white border-2 border-gray-200',
   ghost: 'bg-transparent',
   gradient: 'bg-gradient-to-br from-primary-50 to-secondary-50',
+  subtle: 'bg-gray-50 border border-gray-100',
 }
 
 /**
@@ -59,7 +60,7 @@ const Card = forwardRef(function Card(
 
   const interactiveProps = interactive
     ? {
-        whileHover: { scale: 1.02, y: -2 },
+        whileHover: { scale: 1.01, y: -2 },
         whileTap: { scale: 0.98 },
         transition: { type: 'spring', stiffness: 400, damping: 17 },
       }
@@ -72,7 +73,7 @@ const Card = forwardRef(function Card(
         variants[variant],
         roundedClasses[rounded],
         paddingClasses[padding],
-        interactive && 'cursor-pointer transition-shadow hover:shadow-game-lg',
+        interactive && 'cursor-pointer transition-all duration-200 hover:shadow-game-md active:shadow-game',
         className
       )}
       onClick={onClick}
@@ -161,11 +162,25 @@ const CardFooter = forwardRef(function CardFooter(
   )
 })
 
+const CardDivider = forwardRef(function CardDivider(
+  { className, ...props },
+  ref
+) {
+  return (
+    <div
+      ref={ref}
+      className={cn('border-t border-gray-100 my-4', className)}
+      {...props}
+    />
+  )
+})
+
 // Attach subcomponents
 Card.Header = CardHeader
 Card.Title = CardTitle
 Card.Description = CardDescription
 Card.Content = CardContent
 Card.Footer = CardFooter
+Card.Divider = CardDivider
 
 export default Card

@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { Settings, Trophy, Target, Flame, Zap, Calendar } from 'lucide-react'
+import { Settings, Trophy, Target, Flame, Zap, Calendar, Search, Bird, Gem } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore, useLearningStore, useDiscoveryStore, useAchievementStore } from '@/stores'
-import { Card, Button } from '@/components/ui'
+import { Card, Button, Badge } from '@/components/ui'
 import { XPBar } from '@/components/gamification'
 import { TopBar, BottomNav } from '@/components/layout'
 import { Mascot } from '@/components/mascot'
@@ -56,7 +56,12 @@ export default function ProfileScreen() {
           <h1 className="text-2xl font-extrabold text-gray-800 mt-4">
             Eco Explorer
           </h1>
-          <p className="text-gray-500">Level {level}</p>
+          <div className="flex items-center justify-center gap-2 mt-1">
+            <Badge variant="primary" solid>
+              <Zap className="w-3 h-3 mr-1" />
+              Level {level}
+            </Badge>
+          </div>
         </motion.div>
 
         {/* XP Progress */}
@@ -78,13 +83,18 @@ export default function ProfileScreen() {
           className="grid grid-cols-2 gap-3"
         >
           {stats.map((stat, index) => (
-            <Card key={stat.label} className="text-center">
-              <stat.icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
+            <Card key={stat.label} className="text-center py-5">
+              <div className={`w-10 h-10 mx-auto mb-3 rounded-xl bg-gray-50 flex items-center justify-center`}>
+                <stat.icon className={`w-5 h-5 ${stat.color}`} />
+              </div>
               <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
+              <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
             </Card>
           ))}
         </motion.div>
+
+        {/* Section Divider */}
+        <div className="border-t border-gray-100" />
 
         {/* Achievements Preview */}
         <motion.div
@@ -108,7 +118,9 @@ export default function ProfileScreen() {
                 </p>
               </div>
             </div>
-            <div className="text-2xl">🏆</div>
+            <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-amber-400" />
+            </div>
           </Card>
         </motion.div>
 
@@ -124,8 +136,8 @@ export default function ProfileScreen() {
             className="flex items-center justify-between"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <span className="text-2xl">🔍</span>
+              <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
+                <Search className="w-6 h-6 text-primary-600" />
               </div>
               <div>
                 <h3 className="font-bold text-gray-800">Discoveries</h3>
@@ -134,9 +146,14 @@ export default function ProfileScreen() {
                 </p>
               </div>
             </div>
-            <div className="text-2xl">🦜</div>
+            <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center">
+              <Bird className="w-5 h-5 text-primary-400" />
+            </div>
           </Card>
         </motion.div>
+
+        {/* Section Divider */}
+        <div className="border-t border-gray-100" />
 
         {/* Quick Stats */}
         <motion.div
@@ -149,7 +166,7 @@ export default function ProfileScreen() {
             <div className="space-y-3">
               <StatRow label="Units Completed" value={completedUnits.length} />
               <StatRow label="Total Explorations" value={totalExplorations} />
-              <StatRow label="Gems Earned" value={gems} icon="💎" />
+              <StatRow label="Gems Earned" value={gems} icon={Gem} iconColor="text-cyan-500" />
             </div>
           </Card>
         </motion.div>
@@ -160,12 +177,12 @@ export default function ProfileScreen() {
   )
 }
 
-function StatRow({ label, value, icon }) {
+function StatRow({ label, value, icon: Icon, iconColor }) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
       <span className="text-gray-600">{label}</span>
-      <span className="font-bold text-gray-800">
-        {icon && <span className="mr-1">{icon}</span>}
+      <span className="font-bold text-gray-800 flex items-center gap-1">
+        {Icon && <Icon className={`w-4 h-4 ${iconColor || 'text-gray-500'}`} />}
         {value}
       </span>
     </div>

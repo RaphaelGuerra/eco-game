@@ -1,38 +1,85 @@
 // Framer Motion animation variants for consistent animations across the app
 
-// Button press effect
-export const buttonPress = {
-  whileTap: { scale: 0.95 },
-  transition: { type: 'spring', stiffness: 400, damping: 17 },
+// =============================================================================
+// SPRING PHYSICS CONSTANTS
+// =============================================================================
+// Use these presets for consistent spring animations throughout the app
+// Higher stiffness = snappier, higher damping = less bounce
+
+export const springPresets = {
+  // Snappy interactions (buttons, small UI elements)
+  snappy: { type: 'spring', stiffness: 400, damping: 17 },
+  // Gentle transitions (cards, modals)
+  gentle: { type: 'spring', stiffness: 300, damping: 20 },
+  // Bouncy celebrations (achievements, discoveries)
+  bouncy: { type: 'spring', stiffness: 200, damping: 10 },
+  // Smooth page transitions
+  smooth: { type: 'spring', stiffness: 150, damping: 25 },
 }
 
-// Correct answer celebration
+// =============================================================================
+// TIMING CONSTANTS
+// =============================================================================
+// Standard durations for consistent animation timing
+
+export const timing = {
+  instant: 0.1,
+  fast: 0.2,
+  normal: 0.3,
+  slow: 0.5,
+  pageTransition: 0.25,
+}
+
+// =============================================================================
+// BUTTON ANIMATIONS
+// =============================================================================
+
+export const buttonPress = {
+  whileTap: { scale: 0.95 },
+  transition: springPresets.snappy,
+}
+
+// =============================================================================
+// FEEDBACK ANIMATIONS
+// =============================================================================
+
 export const correctAnswer = {
   initial: { scale: 1 },
   animate: {
     scale: [1, 1.05, 1],
     backgroundColor: ['#ffffff', '#d1fae5', '#ffffff'],
   },
-  transition: { duration: 0.4 },
+  transition: { duration: timing.slow },
 }
 
-// Wrong answer shake
 export const wrongAnswer = {
   animate: {
     x: [0, -10, 10, -10, 10, 0],
   },
-  transition: { duration: 0.4 },
+  transition: { duration: timing.slow },
 }
 
-// Level up celebration
+// =============================================================================
+// CELEBRATION ANIMATIONS
+// =============================================================================
+
 export const levelUp = {
   initial: { scale: 0, opacity: 0, rotate: -180 },
   animate: { scale: 1, opacity: 1, rotate: 0 },
   exit: { scale: 0, opacity: 0 },
-  transition: { type: 'spring', damping: 10, stiffness: 100 },
+  transition: springPresets.bouncy,
 }
 
-// Mascot idle bounce
+export const discoveryReveal = {
+  initial: { scale: 0, rotate: -180 },
+  animate: { scale: 1, rotate: 0 },
+  transition: { ...springPresets.bouncy, delay: 0.2 },
+}
+
+// =============================================================================
+// MASCOT ANIMATIONS
+// =============================================================================
+
 export const mascotBounce = {
   animate: {
     y: [0, -15, 0],
@@ -40,7 +87,6 @@ export const mascotBounce = {
   transition: { repeat: Infinity, duration: 2, ease: 'easeInOut' },
 }
 
-// Mascot cheer animation
 export const mascotCheer = {
   animate: {
     y: [0, -20, 0],
@@ -49,7 +95,6 @@ export const mascotCheer = {
   transition: { repeat: 2, duration: 0.5 },
 }
 
-// Mascot warning shake
 export const mascotWarning = {
   animate: {
     rotate: [-5, 5, -5, 5, 0],
@@ -57,77 +102,91 @@ export const mascotWarning = {
   transition: { duration: 0.5 },
 }
 
-// Card flip reveal
+// =============================================================================
+// CARD ANIMATIONS
+// =============================================================================
+
 export const cardFlip = {
   initial: { rotateY: 180, opacity: 0 },
   animate: { rotateY: 0, opacity: 1 },
   transition: { duration: 0.6, ease: 'easeOut' },
 }
 
-// Card entrance
 export const cardEntrance = {
   initial: { scale: 0.8, opacity: 0, y: 20 },
   animate: { scale: 1, opacity: 1, y: 0 },
-  transition: { type: 'spring', damping: 15, stiffness: 200 },
+  transition: springPresets.gentle,
 }
 
-// Progress bar fill
+// =============================================================================
+// PROGRESS ANIMATIONS
+// =============================================================================
+
 export const progressFill = {
   initial: { width: 0 },
   animate: (width) => ({ width: `${width}%` }),
-  transition: { duration: 0.5, ease: 'easeOut' },
+  transition: { duration: timing.slow, ease: 'easeOut' },
 }
 
-// Page enter from right
+// =============================================================================
+// PAGE TRANSITIONS
+// =============================================================================
+
 export const pageEnterRight = {
   initial: { opacity: 0, x: 20 },
   animate: { opacity: 1, x: 0 },
   exit: { opacity: 0, x: -20 },
-  transition: { duration: 0.2 },
+  transition: { duration: timing.pageTransition },
 }
 
-// Page enter from bottom
 export const pageEnterBottom = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -20 },
-  transition: { duration: 0.2 },
+  transition: { duration: timing.pageTransition },
 }
 
-// Fade in
+// =============================================================================
+// GENERIC TRANSITIONS
+// =============================================================================
+
 export const fadeIn = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
-  transition: { duration: 0.2 },
+  transition: { duration: timing.fast },
 }
 
-// Scale in
 export const scaleIn = {
   initial: { scale: 0.9, opacity: 0 },
   animate: { scale: 1, opacity: 1 },
   exit: { scale: 0.9, opacity: 0 },
-  transition: { type: 'spring', damping: 20, stiffness: 300 },
+  transition: springPresets.gentle,
 }
 
-// Heart shake on loss
+// =============================================================================
+// HEART/LIFE ANIMATIONS
+// =============================================================================
+
 export const heartShake = {
   animate: {
     scale: [1, 1.2, 0.8, 1],
     rotate: [0, -10, 10, 0],
   },
-  transition: { duration: 0.3 },
+  transition: { duration: timing.normal },
 }
 
-// Heart pulse
 export const heartPulse = {
   animate: {
     scale: [1, 1.1, 1],
   },
-  transition: { duration: 0.3 },
+  transition: { duration: timing.normal },
 }
 
-// XP gain pop
+// =============================================================================
+// XP/REWARD ANIMATIONS
+// =============================================================================
+
 export const xpPop = {
   initial: { scale: 0, y: 20, opacity: 0 },
   animate: { scale: 1, y: 0, opacity: 1 },
@@ -135,7 +194,6 @@ export const xpPop = {
   transition: { type: 'spring', stiffness: 300 },
 }
 
-// Streak flame flicker
 export const streakFlicker = {
   animate: {
     scale: [1, 1.1, 1, 1.05, 1],
@@ -144,23 +202,28 @@ export const streakFlicker = {
   transition: { repeat: Infinity, duration: 1.5 },
 }
 
-// Modal backdrop
+// =============================================================================
+// MODAL ANIMATIONS
+// =============================================================================
+
 export const modalBackdrop = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
-  transition: { duration: 0.2 },
+  transition: { duration: timing.fast },
 }
 
-// Modal content
 export const modalContent = {
   initial: { scale: 0.95, opacity: 0, y: 10 },
   animate: { scale: 1, opacity: 1, y: 0 },
   exit: { scale: 0.95, opacity: 0, y: 10 },
-  transition: { type: 'spring', damping: 25, stiffness: 300 },
+  transition: springPresets.gentle,
 }
 
-// List item stagger
+// =============================================================================
+// LIST ANIMATIONS
+// =============================================================================
+
 export const listContainer = {
   animate: {
     transition: {
@@ -172,10 +235,13 @@ export const listContainer = {
 export const listItem = {
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.2 },
+  transition: { duration: timing.fast },
 }
 
-// Explore button pulse
+// =============================================================================
+// SPECIAL EFFECTS
+// =============================================================================
+
 export const explorePulse = {
   animate: {
     scale: [1, 1.05, 1],
@@ -188,14 +254,6 @@ export const explorePulse = {
   transition: { repeat: Infinity, duration: 2 },
 }
 
-// Discovery reveal
-export const discoveryReveal = {
-  initial: { scale: 0, rotate: -180 },
-  animate: { scale: 1, rotate: 0 },
-  transition: { type: 'spring', damping: 10, stiffness: 100, delay: 0.2 },
-}
-
-// Shimmer effect for loading
 export const shimmer = {
   animate: {
     backgroundPosition: ['200% 0', '-200% 0'],
@@ -203,7 +261,10 @@ export const shimmer = {
   transition: { repeat: Infinity, duration: 1.5, ease: 'linear' },
 }
 
-// Confetti burst trigger points
+// =============================================================================
+// CONFETTI CONFIGURATIONS
+// =============================================================================
+
 export const confettiConfig = {
   lessonComplete: {
     particleCount: 100,
@@ -230,31 +291,52 @@ export const confettiConfig = {
   },
 }
 
+// =============================================================================
+// DEFAULT EXPORT
+// =============================================================================
+
 export default {
+  // Spring presets
+  springPresets,
+  timing,
+  // Button
   buttonPress,
+  // Feedback
   correctAnswer,
   wrongAnswer,
+  // Celebration
   levelUp,
+  discoveryReveal,
+  // Mascot
   mascotBounce,
   mascotCheer,
   mascotWarning,
+  // Card
   cardFlip,
   cardEntrance,
+  // Progress
   progressFill,
+  // Page
   pageEnterRight,
   pageEnterBottom,
+  // Generic
   fadeIn,
   scaleIn,
+  // Heart
   heartShake,
   heartPulse,
+  // XP
   xpPop,
   streakFlicker,
+  // Modal
   modalBackdrop,
   modalContent,
+  // List
   listContainer,
   listItem,
+  // Effects
   explorePulse,
-  discoveryReveal,
   shimmer,
+  // Confetti
   confettiConfig,
 }
