@@ -9,7 +9,7 @@ import { Mascot } from '@/components/mascot'
 const STEPS = [
   {
     id: 'welcome',
-    title: 'Welcome to Eco Game!',
+    title: 'Welcome to Itatiaia Resort!',
     description: 'Meet Tuki, your guide to discovering the amazing wildlife around you.',
     mascotState: 'happy',
     mascotMessage: "Hi there! I'm Tuki! 🦜",
