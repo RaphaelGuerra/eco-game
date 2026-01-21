@@ -91,6 +91,9 @@ export const useUserStore = create(
       // Onboarding
       hasCompletedOnboarding: false,
 
+      // XP Boost
+      xpBoostExpiry: null, // Timestamp when boost expires
+
       // Computed getters
       getLevelProgress: () => calculateLevelProgress(get().xp),
       getXPForNextLevel: () => xpForLevel(get().level),
@@ -98,10 +101,27 @@ export const useUserStore = create(
       // Check if daily goal is complete
       isDailyGoalComplete: () => get().dailyXPEarned >= get().dailyXPGoal,
 
+      // Check if XP boost is active
+      isXPBoostActive: () => {
+        const state = get()
+        return state.xpBoostExpiry && Date.now() < state.xpBoostExpiry
+      },
+
+      // Get remaining boost time in ms
+      getXPBoostTimeRemaining: () => {
+        const state = get()
+        if (!state.xpBoostExpiry || Date.now() >= state.xpBoostExpiry) return 0
+        return state.xpBoostExpiry - Date.now()
+      },
+
       // Actions
       addXP: (amount) => {
         const state = get()
-        const newXP = state.xp + amount
+        // Apply 2x multiplier if boost is active
+        const isBoostActive = state.xpBoostExpiry && Date.now() < state.xpBoostExpiry
+        const finalAmount = isBoostActive ? amount * 2 : amount
+
+        const newXP = state.xp + finalAmount
         const oldLevel = state.level
         const newLevel = calculateLevel(newXP)
         const leveledUp = newLevel > oldLevel
@@ -109,11 +129,16 @@ export const useUserStore = create(
         set({
           xp: newXP,
           level: newLevel,
-          dailyXPEarned: state.dailyXPEarned + amount,
+          dailyXPEarned: state.dailyXPEarned + finalAmount,
           lastActivityDate: new Date().toISOString(),
         })
 
-        return { leveledUp, newLevel }
+        return { leveledUp, newLevel, boosted: isBoostActive, xpEarned: finalAmount }
+      },
+
+      activateXPBoost: (durationMs = 60 * 60 * 1000) => {
+        // Default 1 hour boost
+        set({ xpBoostExpiry: Date.now() + durationMs })
       },
 
       loseHeart: () => {
@@ -301,6 +326,7 @@ export const useUserStore = create(
           lastDailyReset: null,
           lastHeartLossTime: null,
           hasCompletedOnboarding: false,
+          xpBoostExpiry: null,
         })
       },
     }),

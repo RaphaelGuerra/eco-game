@@ -68,6 +68,63 @@
   .tap-highlight {
     @apply active:bg-black/5 transition-colors;
   }
+
+  /* Typography: Headings */
+  .heading-1 {
+    @apply text-3xl font-extrabold text-gray-900 leading-tight tracking-tight;
+  }
+
+  .heading-2 {
+    @apply text-2xl font-bold text-gray-800 leading-snug;
+  }
+
+  .heading-3 {
+    @apply text-xl font-bold text-gray-800 leading-snug;
+  }
+
+  .heading-4 {
+    @apply text-lg font-semibold text-gray-700 leading-normal;
+  }
+
+  /* Typography: Body text */
+  .body-lg {
+    @apply text-lg text-gray-600 leading-relaxed;
+  }
+
+  .body-md {
+    @apply text-base text-gray-600 leading-relaxed;
+  }
+
+  .body-sm {
+    @apply text-sm text-gray-500 leading-normal;
+  }
+
+  /* Typography: Labels and captions */
+  .label {
+    @apply text-sm font-medium text-gray-700;
+  }
+
+  .caption {
+    @apply text-xs text-gray-500;
+  }
+
+  /* Line height utilities */
+  .leading-tight {
+    line-height: 1.25;
+  }
+
+  .leading-snug {
+    line-height: 1.375;
+  }
+
+  .leading-relaxed {
+    line-height: 1.625;
+  }
+
+  /* Section divider */
+  .section-divider {
+    @apply border-t border-gray-100 my-4;
+  }
 }
 
 /* Component styles */
@@ -178,7 +235,7 @@
   }
 }
 
-/* Reduced motion preferences */
+/* Reduced motion preferences - system preference */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -187,4 +244,13 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Reduced motion - user setting override */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }

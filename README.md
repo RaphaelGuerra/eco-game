@@ -51,6 +51,10 @@ src/
 └── data/             # Static content (coming soon)
 ```
 
+## 🧭 Workflow
+
+See the Pull Request Policy in [`plans/SYNC-WORKFLOW.md`](plans/SYNC-WORKFLOW.md:1).
+
 ## 🎮 Game Mechanics
 
 ### XP & Leveling

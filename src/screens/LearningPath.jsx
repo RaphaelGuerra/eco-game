@@ -111,42 +111,70 @@ export default function LearningPath() {
                 {/* Unit Header */}
                 <Card
                   className={cn(
-                    'mb-4',
-                    unitStatus === 'locked' && 'opacity-60'
+                    'mb-4 transition-all duration-200',
+                    unitStatus === 'locked' && 'bg-gray-50',
+                    unitStatus !== 'locked' && 'hover:shadow-game-md'
                   )}
                 >
                   <div className="flex items-center gap-4">
                     <div
                       className={cn(
-                        'w-14 h-14 rounded-xl flex items-center justify-center text-2xl',
+                        'w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-sm',
                         'bg-gradient-to-br',
-                        unit.color
+                        unit.color,
+                        unitStatus === 'locked' && 'opacity-50 grayscale'
                       )}
                     >
                       {unit.icon}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h2 className="font-bold text-gray-800">{unit.title}</h2>
+                        <h2 className={cn(
+                          'font-bold',
+                          unitStatus === 'locked' ? 'text-gray-500' : 'text-gray-800'
+                        )}>{unit.title}</h2>
                         {unitStatus === 'locked' && (
                           <Lock className="w-4 h-4 text-gray-400" />
                         )}
                         {unitStatus === 'completed' && (
-                          <Check className="w-4 h-4 text-green-500" />
+                          <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                            <Check className="w-3 h-3 text-white" />
+                          </div>
                         )}
                       </div>
-                      <p className="text-sm text-gray-500">{unit.description}</p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {completedCount}/{unit.lessons.length} lessons
-                      </p>
+                      <p className={cn(
+                        'text-sm',
+                        unitStatus === 'locked' ? 'text-gray-400' : 'text-gray-500'
+                      )}>{unit.description}</p>
+                      {/* Progress indicator */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-primary-400 to-primary-500 rounded-full transition-all duration-300"
+                            style={{ width: `${(completedCount / unit.lessons.length) * 100}%` }}
+                          />
+                        </div>
+                        <span className={cn(
+                          'text-xs font-medium',
+                          unitStatus === 'locked' ? 'text-gray-400' : 'text-gray-500'
+                        )}>
+                          {completedCount}/{unit.lessons.length}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </Card>
 
                 {/* Lessons */}
                 <div className="relative pl-8">
-                  {/* Connecting line */}
-                  <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+                  {/* Connecting line with gradient */}
+                  <div className="absolute left-4 top-0 bottom-0 w-0.5 overflow-hidden">
+                    <div
+                      className="absolute top-0 left-0 w-full bg-gradient-to-b from-primary-400 to-primary-200 transition-all duration-500"
+                      style={{ height: `${(completedCount / unit.lessons.length) * 100}%` }}
+                    />
+                    <div className="absolute top-0 left-0 w-full h-full bg-gray-200 -z-10" />
+                  </div>
 
                   <div className="space-y-3">
                     {unit.lessons.map((lesson, lessonIndex) => {
@@ -185,15 +213,21 @@ export default function LearningPath() {
 
 function LessonNode({ lesson, status, onClick }) {
   const statusStyles = {
-    locked: 'bg-gray-100 border-gray-200 text-gray-400',
-    current: 'bg-primary-50 border-primary-300 text-primary-700',
-    completed: 'bg-green-50 border-green-300 text-green-700',
+    locked: 'bg-gray-50 border-gray-200 text-gray-400',
+    current: 'bg-primary-50 border-primary-300 text-primary-700 shadow-sm',
+    completed: 'bg-green-50 border-green-200 text-green-700',
   }
 
   const nodeStyles = {
     locked: 'bg-gray-200 border-gray-300',
-    current: 'bg-primary-500 border-primary-600',
+    current: 'bg-primary-500 border-primary-600 shadow-primary',
     completed: 'bg-green-500 border-green-600',
+  }
+
+  const hoverStyles = {
+    locked: '',
+    current: 'hover:shadow-md hover:border-primary-400 hover:bg-primary-100',
+    completed: 'hover:shadow-md hover:border-green-300 hover:bg-green-100',
   }
 
   return (
@@ -201,33 +235,42 @@ function LessonNode({ lesson, status, onClick }) {
       onClick={onClick}
       disabled={status === 'locked'}
       className={cn(
-        'relative w-full flex items-center gap-4 p-3 rounded-xl border-2 transition-all',
+        'relative w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200',
         statusStyles[status],
-        status !== 'locked' && 'hover:shadow-md cursor-pointer'
+        status !== 'locked' && 'cursor-pointer',
+        hoverStyles[status]
       )}
       whileTap={status !== 'locked' ? { scale: 0.98 } : {}}
     >
       {/* Node dot */}
       <div
         className={cn(
-          'absolute -left-6 w-4 h-4 rounded-full border-2',
-          nodeStyles[status]
+          'absolute -left-6 w-4 h-4 rounded-full border-2 transition-transform duration-200',
+          nodeStyles[status],
+          status === 'current' && 'scale-110'
         )}
       >
         {status === 'completed' && (
           <Check className="w-2.5 h-2.5 text-white absolute top-0.5 left-0.5" />
         )}
+        {status === 'current' && (
+          <div className="absolute inset-0 rounded-full bg-primary-500 animate-ping opacity-50" />
+        )}
       </div>
 
       {/* Content */}
       <div className="flex-1 text-left">
-        <p className="font-medium">{lesson.title}</p>
-        <p className="text-xs opacity-70">+{lesson.xp} XP</p>
+        <p className="font-semibold">{lesson.title}</p>
+        <p className="text-xs opacity-70 mt-0.5">+{lesson.xp} XP</p>
       </div>
 
       {/* Action icon */}
       {status === 'locked' && <Lock className="w-4 h-4" />}
-      {status === 'current' && <Play className="w-4 h-4 fill-current" />}
+      {status === 'current' && (
+        <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center">
+          <Play className="w-4 h-4 text-white fill-current" />
+        </div>
+      )}
       {status === 'completed' && <Check className="w-4 h-4" />}
     </motion.button>
   )

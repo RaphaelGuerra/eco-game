@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Check, X } from 'lucide-react'
+import { cn } from '@/lib/cn'
 import { useUserStore, useLearningStore } from '@/stores'
 import { Button, Card } from '@/components/ui'
+import { AlertModal } from '@/components/ui/Modal'
 import { SegmentedProgress } from '@/components/ui/ProgressBar'
 import { LessonTopBar } from '@/components/layout/TopBar'
 import { Mascot } from '@/components/mascot'
@@ -67,6 +70,8 @@ export default function LessonScreen() {
   const [showFeedback, setShowFeedback] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [lessonComplete, setLessonComplete] = useState(false)
+  const [lessonResults, setLessonResults] = useState(null)
+  const [showExitModal, setShowExitModal] = useState(false)
   
   const addXP = useUserStore((state) => state.addXP)
   const loseHeart = useUserStore((state) => state.loseHeart)
@@ -117,6 +122,7 @@ export default function LessonScreen() {
     } else {
       // Lesson complete
       const results = completeLesson()
+      setLessonResults(results)
       const xpEarned = 50 + (results?.isPerfect ? 25 : 0)
       addXP(xpEarned)
       
@@ -133,7 +139,11 @@ export default function LessonScreen() {
   }
 
   const handleExit = () => {
-    // TODO: Show confirmation modal
+    setShowExitModal(true)
+  }
+
+  const confirmExit = () => {
+    setShowExitModal(false)
     navigate('/learn')
   }
 
@@ -152,7 +162,7 @@ export default function LessonScreen() {
 
   // Lesson complete screen
   if (lessonComplete) {
-    const progress = activeLessonProgress
+    const progress = lessonResults || activeLessonProgress
     const isPerfect = progress?.wrongAnswers === 0
 
     return (
@@ -240,24 +250,46 @@ export default function LessonScreen() {
               {currentChallenge.options.map((option) => {
                 const isSelected = selectedAnswer === option.id
                 const showResult = showFeedback && isSelected
+                const showCorrectHint = showFeedback && option.correct && !isSelected
 
                 return (
                   <motion.button
                     key={option.id}
                     onClick={() => handleSelectAnswer(option.id)}
                     disabled={showFeedback}
-                    className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                      showResult
-                        ? option.correct
-                          ? 'border-green-500 bg-green-50'
-                          : 'border-red-500 bg-red-50'
-                        : isSelected
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
-                    }`}
+                    className={cn(
+                      'w-full p-4 rounded-xl text-left transition-all duration-200',
+                      // Result states
+                      showResult && option.correct && 'border-2 border-green-500 bg-green-50 shadow-md',
+                      showResult && !option.correct && 'border-2 border-red-400 bg-red-50',
+                      showCorrectHint && 'border-2 border-green-300 bg-green-50/50',
+                      // Selected state
+                      isSelected && !showFeedback && 'border-[3px] border-primary-500 bg-primary-50 shadow-md',
+                      // Default state
+                      !isSelected && !showFeedback && 'border-2 border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm',
+                      // Disabled non-selected during feedback
+                      showFeedback && !isSelected && !showCorrectHint && 'opacity-50'
+                    )}
                     whileTap={!showFeedback ? { scale: 0.98 } : {}}
                   >
-                    <span className="font-medium">{option.text}</span>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">{option.text}</span>
+                      {showResult && option.correct && (
+                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                          <Check className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+                      {showResult && !option.correct && (
+                        <div className="w-6 h-6 rounded-full bg-red-400 flex items-center justify-center">
+                          <X className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+                      {showCorrectHint && (
+                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                          <Check className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+                    </div>
                   </motion.button>
                 )
               })}
@@ -269,19 +301,41 @@ export default function LessonScreen() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`mt-6 p-4 rounded-xl ${
-                    isCorrect ? 'bg-green-100' : 'bg-red-100'
-                  }`}
+                  className={cn(
+                    'mt-6 p-4 rounded-xl border-l-4',
+                    isCorrect
+                      ? 'bg-green-50 border-green-500'
+                      : 'bg-red-50 border-red-400'
+                  )}
                 >
-                  <p
-                    className={`font-medium ${
-                      isCorrect ? 'text-green-800' : 'text-red-800'
-                    }`}
-                  >
-                    {isCorrect
-                      ? currentChallenge.feedback.correct
-                      : currentChallenge.feedback.incorrect}
-                  </p>
+                  <div className="flex items-start gap-3">
+                    <div className={cn(
+                      'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
+                      isCorrect ? 'bg-green-500' : 'bg-red-400'
+                    )}>
+                      {isCorrect ? (
+                        <Check className="w-5 h-5 text-white" />
+                      ) : (
+                        <X className="w-5 h-5 text-white" />
+                      )}
+                    </div>
+                    <div>
+                      <p className={cn(
+                        'font-semibold mb-1',
+                        isCorrect ? 'text-green-800' : 'text-red-800'
+                      )}>
+                        {isCorrect ? 'Correct!' : 'Not quite'}
+                      </p>
+                      <p className={cn(
+                        'text-sm',
+                        isCorrect ? 'text-green-700' : 'text-red-700'
+                      )}>
+                        {isCorrect
+                          ? currentChallenge.feedback.correct
+                          : currentChallenge.feedback.incorrect}
+                      </p>
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -311,6 +365,18 @@ export default function LessonScreen() {
           )}
         </div>
       </main>
+
+      {/* Exit Confirmation Modal */}
+      <AlertModal
+        isOpen={showExitModal}
+        onClose={() => setShowExitModal(false)}
+        onConfirm={confirmExit}
+        title="Leave Lesson?"
+        message="Your progress in this lesson will be lost. Are you sure you want to exit?"
+        confirmText="Leave"
+        cancelText="Stay"
+        variant="danger"
+      />
     </div>
   )
 }

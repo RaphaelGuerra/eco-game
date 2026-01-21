@@ -45,7 +45,7 @@ export const useDiscoveryStore = create(
 
       // Exploration state
       lastExploreTime: null,
-      exploreCooldown: 30000, // 30 seconds
+      exploreCooldown: 5000, // 5 seconds
       isExploring: false,
 
       // Current encounter (during exploration)
