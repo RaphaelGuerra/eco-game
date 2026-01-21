@@ -67,6 +67,7 @@ export default function LessonScreen() {
   const [showFeedback, setShowFeedback] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [lessonComplete, setLessonComplete] = useState(false)
+  const [lessonResults, setLessonResults] = useState(null)
   
   const addXP = useUserStore((state) => state.addXP)
   const loseHeart = useUserStore((state) => state.loseHeart)
@@ -117,6 +118,7 @@ export default function LessonScreen() {
     } else {
       // Lesson complete
       const results = completeLesson()
+      setLessonResults(results)
       const xpEarned = 50 + (results?.isPerfect ? 25 : 0)
       addXP(xpEarned)
       
@@ -152,7 +154,7 @@ export default function LessonScreen() {
 
   // Lesson complete screen
   if (lessonComplete) {
-    const progress = activeLessonProgress
+    const progress = lessonResults || activeLessonProgress
     const isPerfect = progress?.wrongAnswers === 0
 
     return (
