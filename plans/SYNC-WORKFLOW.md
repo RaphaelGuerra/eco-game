@@ -61,6 +61,13 @@ git push -u origin feature/short-description
 - Use `phase-1` only for small, low-risk fixes or docs.
 - Other prefixes when helpful: `fix/`, `chore/`, `docs/`, `refactor/`.
 
+### Pull Request Policy
+
+- One feature/task per PR. Avoid bundling unrelated work.
+- No direct pushes to the default branch except emergencies; document the reason in the PR or notes.
+- Keep PRs small and focused; use descriptive branch names like `feature/`, `fix/`, `chore/`, `docs/`.
+- Phases should be delivered as multiple granular PRs, not a single large PR.
+
 ### Commit message format (Conventional Commits)
 
 Format: `type(scope): description`

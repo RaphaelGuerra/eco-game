@@ -235,7 +235,7 @@
   }
 }
 
-/* Reduced motion preferences */
+/* Reduced motion preferences - system preference */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -244,4 +244,13 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Reduced motion - user setting override */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }

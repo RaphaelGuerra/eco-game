@@ -5,6 +5,7 @@ import { Check, X } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { useUserStore, useLearningStore } from '@/stores'
 import { Button, Card } from '@/components/ui'
+import { AlertModal } from '@/components/ui/Modal'
 import { SegmentedProgress } from '@/components/ui/ProgressBar'
 import { LessonTopBar } from '@/components/layout/TopBar'
 import { Mascot } from '@/components/mascot'
@@ -70,6 +71,7 @@ export default function LessonScreen() {
   const [isCorrect, setIsCorrect] = useState(false)
   const [lessonComplete, setLessonComplete] = useState(false)
   const [lessonResults, setLessonResults] = useState(null)
+  const [showExitModal, setShowExitModal] = useState(false)
   
   const addXP = useUserStore((state) => state.addXP)
   const loseHeart = useUserStore((state) => state.loseHeart)
@@ -137,7 +139,11 @@ export default function LessonScreen() {
   }
 
   const handleExit = () => {
-    // TODO: Show confirmation modal
+    setShowExitModal(true)
+  }
+
+  const confirmExit = () => {
+    setShowExitModal(false)
     navigate('/learn')
   }
 
@@ -359,6 +365,18 @@ export default function LessonScreen() {
           )}
         </div>
       </main>
+
+      {/* Exit Confirmation Modal */}
+      <AlertModal
+        isOpen={showExitModal}
+        onClose={() => setShowExitModal(false)}
+        onConfirm={confirmExit}
+        title="Leave Lesson?"
+        message="Your progress in this lesson will be lost. Are you sure you want to exit?"
+        confirmText="Leave"
+        cancelText="Stay"
+        variant="danger"
+      />
     </div>
   )
 }

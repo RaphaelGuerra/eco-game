@@ -61,6 +61,8 @@ export default function ShopScreen() {
   const spendGems = useUserStore((state) => state.spendGems)
   const addStreakFreeze = useUserStore((state) => state.addStreakFreeze)
   const refillHearts = useUserStore((state) => state.refillHearts)
+  const activateXPBoost = useUserStore((state) => state.activateXPBoost)
+  const isXPBoostActive = useUserStore((state) => state.isXPBoostActive)
 
   const handlePurchase = (item) => {
     setSelectedItem(item)
@@ -90,7 +92,7 @@ export default function ShopScreen() {
         refillHearts()
         break
       case 'xp-boost':
-        // TODO: Implement XP boost
+        activateXPBoost(60 * 60 * 1000) // 1 hour boost
         break
     }
 
@@ -100,6 +102,13 @@ export default function ShopScreen() {
   }
 
   const canAfford = (price) => gems >= price
+
+  const canPurchase = (item) => {
+    if (!canAfford(item.price)) return false
+    // Can't purchase XP boost if one is already active
+    if (item.id === 'xp-boost' && isXPBoostActive()) return false
+    return true
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -148,7 +157,8 @@ export default function ShopScreen() {
                 <ShopItem
                   key={item.id}
                   item={item}
-                  canAfford={canAfford(item.price)}
+                  canAfford={canPurchase(item)}
+                  isActive={item.id === 'xp-boost' && isXPBoostActive()}
                   onPurchase={() => handlePurchase(item)}
                 />
               )
@@ -174,7 +184,7 @@ export default function ShopScreen() {
                   <ShopItem
                     key={item.id}
                     item={item}
-                    canAfford={canAfford(item.price)}
+                    canAfford={canPurchase(item)}
                     onPurchase={() => handlePurchase(item)}
                     isBundle
                   />
@@ -220,7 +230,7 @@ export default function ShopScreen() {
   )
 }
 
-function ShopItem({ item, canAfford, onPurchase, isBundle }) {
+function ShopItem({ item, canAfford, onPurchase, isBundle, isActive }) {
   const Icon = item.icon
 
   return (
@@ -228,14 +238,16 @@ function ShopItem({ item, canAfford, onPurchase, isBundle }) {
       className={cn(
         'flex items-center gap-4 p-4',
         !isBundle && 'bg-white rounded-xl shadow-game',
-        !canAfford && 'bg-gray-50'
+        !canAfford && !isActive && 'bg-gray-50',
+        isActive && 'bg-amber-50 border border-amber-200 rounded-xl'
       )}
     >
       <div
         className={cn(
           'relative w-12 h-12 rounded-xl flex items-center justify-center',
           item.bgColor,
-          !canAfford && 'grayscale opacity-70'
+          !canAfford && !isActive && 'grayscale opacity-70',
+          isActive && 'ring-2 ring-amber-400'
         )}
       >
         <Icon className={cn('w-6 h-6', item.iconColor)} />
@@ -249,22 +261,24 @@ function ShopItem({ item, canAfford, onPurchase, isBundle }) {
       <div className="flex-1">
         <h3 className={cn(
           'font-bold',
-          canAfford ? 'text-gray-800' : 'text-gray-500'
+          canAfford || isActive ? 'text-gray-800' : 'text-gray-500'
         )}>{item.name}</h3>
         <p className={cn(
           'text-sm',
-          canAfford ? 'text-gray-500' : 'text-gray-400'
-        )}>{item.description}</p>
+          canAfford || isActive ? 'text-gray-500' : 'text-gray-400'
+        )}>
+          {isActive ? 'Active! Earning 2x XP' : item.description}
+        </p>
       </div>
 
       <Button
-        variant={canAfford ? 'amber' : 'ghost'}
+        variant={isActive ? 'success' : canAfford ? 'amber' : 'ghost'}
         size="sm"
-        disabled={!canAfford}
+        disabled={!canAfford || isActive}
         onClick={onPurchase}
-        className={!canAfford ? 'cursor-not-allowed' : ''}
+        className={!canAfford && !isActive ? 'cursor-not-allowed' : ''}
       >
-        <GemPrice amount={item.price} affordable={canAfford} size="sm" />
+        {isActive ? 'Active' : <GemPrice amount={item.price} affordable={canAfford} size="sm" />}
       </Button>
     </div>
   )

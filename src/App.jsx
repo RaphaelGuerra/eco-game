@@ -2,7 +2,7 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { soundManager } from '@/lib/soundManager'
-import { useUserStore, useDiscoveryStore } from '@/stores'
+import { useUserStore, useDiscoveryStore, useSettingsStore } from '@/stores'
 
 // Eager load Dashboard for fast initial render
 import Dashboard from '@/screens/Dashboard'
@@ -15,6 +15,9 @@ const ExploreScreen = lazy(() => import('@/screens/ExploreScreen'))
 const ProfileScreen = lazy(() => import('@/screens/ProfileScreen'))
 const ShopScreen = lazy(() => import('@/screens/ShopScreen'))
 const CollectionScreen = lazy(() => import('@/screens/CollectionScreen'))
+const SettingsScreen = lazy(() => import('@/screens/SettingsScreen'))
+const AchievementsScreen = lazy(() => import('@/screens/AchievementsScreen'))
+const LeaderboardScreen = lazy(() => import('@/screens/LeaderboardScreen'))
 
 // Loading fallback
 function LoadingScreen() {
@@ -45,6 +48,11 @@ export default function App() {
   const regenerateHearts = useUserStore((state) => state.regenerateHearts)
   const updateConditions = useDiscoveryStore((state) => state.updateConditions)
 
+  // Settings
+  const soundEnabled = useSettingsStore((state) => state.soundEnabled)
+  const soundVolume = useSettingsStore((state) => state.soundVolume)
+  const reducedMotion = useSettingsStore((state) => state.reducedMotion)
+
   // Initialize app on mount
   useEffect(() => {
     // Initialize sound manager
@@ -71,6 +79,21 @@ export default function App() {
     return () => clearInterval(interval)
   }, [checkDailyReset, checkAndUpdateStreak, regenerateHearts, updateConditions])
 
+  // Sync sound settings with sound manager
+  useEffect(() => {
+    soundManager.setMuted(!soundEnabled)
+    soundManager.setVolume(soundVolume)
+  }, [soundEnabled, soundVolume])
+
+  // Apply reduced motion preference to document
+  useEffect(() => {
+    if (reducedMotion) {
+      document.documentElement.classList.add('reduce-motion')
+    } else {
+      document.documentElement.classList.remove('reduce-motion')
+    }
+  }, [reducedMotion])
+
   return (
     <BrowserRouter>
       <AnimatePresence mode="wait">
@@ -87,6 +110,9 @@ export default function App() {
             <Route path="/profile" element={<ProfileScreen />} />
             <Route path="/shop" element={<ShopScreen />} />
             <Route path="/collection" element={<CollectionScreen />} />
+            <Route path="/settings" element={<SettingsScreen />} />
+            <Route path="/achievements" element={<AchievementsScreen />} />
+            <Route path="/leaderboard" element={<LeaderboardScreen />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
