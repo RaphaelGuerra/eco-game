@@ -1,5 +1,29 @@
 # 🦜 Eco Game
 
+Last updated: 2026-01-22
+
+## Table of Contents
+
+<!-- TOC start -->
+- [✨ Features](#features)
+- [🚀 Quick Start](#quick-start)
+- [🛠️ Tech Stack](#tech-stack)
+- [📁 Project Structure](#project-structure)
+- [🧭 Workflow](#workflow)
+- [🎮 Game Mechanics](#game-mechanics)
+  - [XP & Leveling](#xp--leveling)
+  - [Hearts System](#hearts-system)
+  - [Streak System](#streak-system)
+  - [Discovery System](#discovery-system)
+- [🎨 Design System](#design-system)
+  - [Colors](#colors)
+  - [Typography](#typography)
+- [📱 Screens](#screens)
+- [🔊 Audio](#audio)
+- [🗺️ Roadmap](#roadmap)
+- [📄 License](#license)
+<!-- TOC end -->
+
 A Duolingo-style educational resort app built with React, featuring gamification mechanics, exploration-based discovery, and engaging learning experiences.
 
 ## ✨ Features

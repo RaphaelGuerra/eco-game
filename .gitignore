@@ -32,3 +32,4 @@ coverage/
 
 # Tooling
 .claude/
+node_modules
