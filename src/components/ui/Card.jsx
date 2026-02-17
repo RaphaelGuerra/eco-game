@@ -3,12 +3,12 @@ import { motion } from 'framer-motion'
 import { cn } from '@/lib/cn'
 
 const variants = {
-  default: 'bg-white shadow-game',
-  elevated: 'bg-white shadow-game-lg',
-  outlined: 'bg-white border-2 border-gray-200',
+  default: 'bg-white shadow-game dark:bg-gray-800 dark:shadow-none dark:border dark:border-gray-700',
+  elevated: 'bg-white shadow-game-lg dark:bg-gray-800 dark:shadow-none dark:border dark:border-gray-700',
+  outlined: 'bg-white border-2 border-gray-200 dark:bg-gray-800 dark:border-gray-600',
   ghost: 'bg-transparent',
-  gradient: 'bg-gradient-to-br from-primary-50 to-secondary-50',
-  subtle: 'bg-gray-50 border border-gray-100',
+  gradient: 'bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900/30 dark:to-secondary-900/30',
+  subtle: 'bg-gray-50 border border-gray-100 dark:bg-gray-800/50 dark:border-gray-700',
 }
 
 /**
@@ -109,7 +109,7 @@ const CardTitle = forwardRef(function CardTitle(
   return (
     <h3
       ref={ref}
-      className={cn('text-lg font-bold text-gray-900', className)}
+      className={cn('text-lg font-bold text-gray-900 dark:text-gray-100', className)}
       {...props}
     >
       {children}
@@ -124,7 +124,7 @@ const CardDescription = forwardRef(function CardDescription(
   return (
     <p
       ref={ref}
-      className={cn('text-sm text-gray-500 mt-1', className)}
+      className={cn('text-sm text-gray-500 mt-1 dark:text-gray-400', className)}
       {...props}
     >
       {children}
@@ -169,7 +169,7 @@ const CardDivider = forwardRef(function CardDivider(
   return (
     <div
       ref={ref}
-      className={cn('border-t border-gray-100 my-4', className)}
+      className={cn('border-t border-gray-100 my-4 dark:border-gray-700', className)}
       {...props}
     />
   )

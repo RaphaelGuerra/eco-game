@@ -64,10 +64,10 @@ export default function SettingsScreen() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       <TopBar
         centerContent={
-          <h1 className="text-lg font-bold text-gray-800">Settings</h1>
+          <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">Settings</h1>
         }
       />
 
@@ -77,7 +77,7 @@ export default function SettingsScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-1">
             Sound & Music
           </h2>
           <Card>
@@ -88,7 +88,7 @@ export default function SettingsScreen() {
               enabled={soundEnabled}
               onToggle={handleSoundToggle}
             />
-            <div className="border-t border-gray-100" />
+            <div className="border-t border-gray-100 dark:border-gray-700" />
             <SettingToggle
               icon={Music}
               label="Background Music"
@@ -105,7 +105,7 @@ export default function SettingsScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-1">
             Notifications
           </h2>
           <Card>
@@ -125,7 +125,7 @@ export default function SettingsScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
         >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-1">
             Language
           </h2>
           <Card className="p-0 overflow-hidden">
@@ -133,13 +133,13 @@ export default function SettingsScreen() {
               <button
                 key={lang.code}
                 onClick={() => setLanguage(lang.code)}
-                className={`w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors ${
-                  index !== languages.length - 1 ? 'border-b border-gray-100' : ''
+                className={`w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                  index !== languages.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Globe className="w-5 h-5 text-gray-400" />
-                  <span className="font-medium text-gray-700">{lang.label}</span>
+                  <Globe className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                  <span className="font-medium text-gray-700 dark:text-gray-200">{lang.label}</span>
                 </div>
                 {language === lang.code && (
                   <div className="w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center">
@@ -157,7 +157,7 @@ export default function SettingsScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-1">
             Theme
           </h2>
           <Card className="p-0 overflow-hidden">
@@ -165,13 +165,13 @@ export default function SettingsScreen() {
               <button
                 key={t.code}
                 onClick={() => setTheme(t.code)}
-                className={`w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors ${
-                  index !== themes.length - 1 ? 'border-b border-gray-100' : ''
+                className={`w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                  index !== themes.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <t.icon className="w-5 h-5 text-gray-400" />
-                  <span className="font-medium text-gray-700">{t.label}</span>
+                  <t.icon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                  <span className="font-medium text-gray-700 dark:text-gray-200">{t.label}</span>
                 </div>
                 {theme === t.code && (
                   <div className="w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center">
@@ -189,7 +189,7 @@ export default function SettingsScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
         >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-1">
             Accessibility
           </h2>
           <Card>
@@ -200,7 +200,7 @@ export default function SettingsScreen() {
               enabled={highContrast}
               onToggle={toggleHighContrast}
             />
-            <div className="border-t border-gray-100" />
+            <div className="border-t border-gray-100 dark:border-gray-700" />
             <SettingToggle
               icon={Accessibility}
               label="Reduced Motion"
@@ -217,7 +217,7 @@ export default function SettingsScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-1">
             Reset
           </h2>
           <Card className="space-y-3">
@@ -230,7 +230,7 @@ export default function SettingsScreen() {
             >
               Reset Settings to Defaults
             </Button>
-            <div className="border-t border-gray-100" />
+            <div className="border-t border-gray-100 dark:border-gray-700" />
             <Button
               variant="ghost"
               fullWidth
@@ -269,18 +269,18 @@ function SettingToggle({ icon: Icon, label, description, enabled, onToggle }) {
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors rounded-lg"
+      className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-lg"
     >
       <div className="flex items-center gap-3">
-        <Icon className={`w-5 h-5 ${enabled ? 'text-primary-500' : 'text-gray-400'}`} />
+        <Icon className={`w-5 h-5 ${enabled ? 'text-primary-500' : 'text-gray-400 dark:text-gray-500'}`} />
         <div className="text-left">
-          <p className="font-medium text-gray-700">{label}</p>
-          <p className="text-sm text-gray-500">{description}</p>
+          <p className="font-medium text-gray-700 dark:text-gray-200">{label}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
         </div>
       </div>
       <div
         className={`w-12 h-7 rounded-full p-1 transition-colors ${
-          enabled ? 'bg-primary-500' : 'bg-gray-200'
+          enabled ? 'bg-primary-500' : 'bg-gray-200 dark:bg-gray-600'
         }`}
       >
         <motion.div

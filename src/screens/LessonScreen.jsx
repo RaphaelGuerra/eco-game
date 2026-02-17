@@ -6,13 +6,18 @@ import { cn } from '@/lib/cn'
 import { useUserStore, useLearningStore } from '@/stores'
 import { Button, Card } from '@/components/ui'
 import { AlertModal } from '@/components/ui/Modal'
-import { SegmentedProgress } from '@/components/ui/ProgressBar'
 import { LessonTopBar } from '@/components/layout/TopBar'
 import { Mascot } from '@/components/mascot'
 import { soundManager } from '@/lib/soundManager'
 import { celebrateLessonComplete, celebratePerfectLesson } from '@/lib/confetti'
+import {
+  MultipleChoiceChallenge,
+  TrueFalseChallenge,
+  MatchingChallenge,
+  FillInBlankChallenge,
+} from '@/components/challenges'
 
-// Demo challenges for lesson
+// Demo challenges for lesson - now with multiple types
 const DEMO_CHALLENGES = [
   {
     id: 'c1',
@@ -25,12 +30,51 @@ const DEMO_CHALLENGES = [
       { id: 'd', text: 'Garden', correct: false },
     ],
     feedback: {
-      correct: 'That\'s right! The main restaurant is in the lobby.',
+      correct: "That's right! The main restaurant is in the lobby.",
       incorrect: 'Not quite. The main restaurant is actually in the lobby.',
     },
   },
   {
     id: 'c2',
+    type: 'true-false',
+    question: 'The resort front desk is open 24 hours a day.',
+    statement: 'The resort front desk is open 24 hours a day.',
+    isTrue: true,
+    feedback: {
+      correct: 'Correct! Our front desk is available 24/7 for your convenience.',
+      incorrect: 'Actually, our front desk IS open 24/7!',
+    },
+  },
+  {
+    id: 'c3',
+    type: 'fill-in-blank',
+    question: 'Complete the sentence about our mascot.',
+    sentence: 'The resort mascot is Tuki the ___.',
+    answer: 'Toucan',
+    acceptableAnswers: ['toucan'],
+    distractors: ['Parrot', 'Flamingo', 'Pelican'],
+    feedback: {
+      correct: 'Yes! Tuki the Toucan is our beloved mascot!',
+      incorrect: 'Close! Our mascot is actually Tuki the Toucan.',
+    },
+  },
+  {
+    id: 'c4',
+    type: 'matching',
+    question: 'Match each amenity with its location.',
+    instruction: 'Tap an amenity, then tap where to find it',
+    pairs: [
+      { left: 'Restaurant', right: 'Lobby' },
+      { left: 'Fitness Center', right: 'Ground Floor West' },
+      { left: 'Spa', right: 'Second Floor' },
+    ],
+    feedback: {
+      correct: 'Perfect! You know your way around the resort!',
+      incorrect: 'Some matches were incorrect. Review the resort map!',
+    },
+  },
+  {
+    id: 'c5',
     type: 'multiple-choice',
     question: 'What time does breakfast start?',
     options: [
@@ -44,27 +88,12 @@ const DEMO_CHALLENGES = [
       incorrect: 'Actually, breakfast starts at 7:00 AM.',
     },
   },
-  {
-    id: 'c3',
-    type: 'multiple-choice',
-    question: 'Which bird is the resort mascot?',
-    options: [
-      { id: 'a', text: 'Parrot', correct: false },
-      { id: 'b', text: 'Toucan', correct: true },
-      { id: 'c', text: 'Flamingo', correct: false },
-      { id: 'd', text: 'Pelican', correct: false },
-    ],
-    feedback: {
-      correct: 'Yes! Tuki the Toucan is our beloved mascot! 🦜',
-      incorrect: 'Close! Our mascot is actually Tuki the Toucan.',
-    },
-  },
 ]
 
 export default function LessonScreen() {
   const { lessonId } = useParams()
   const navigate = useNavigate()
-  
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [showFeedback, setShowFeedback] = useState(false)
@@ -72,11 +101,11 @@ export default function LessonScreen() {
   const [lessonComplete, setLessonComplete] = useState(false)
   const [lessonResults, setLessonResults] = useState(null)
   const [showExitModal, setShowExitModal] = useState(false)
-  
+
   const addXP = useUserStore((state) => state.addXP)
   const loseHeart = useUserStore((state) => state.loseHeart)
   const hearts = useUserStore((state) => state.hearts)
-  
+
   const startLesson = useLearningStore((state) => state.startLesson)
   const completeChallenge = useLearningStore((state) => state.completeChallenge)
   const completeLesson = useLearningStore((state) => state.completeLesson)
@@ -91,24 +120,47 @@ export default function LessonScreen() {
     startLesson(lessonId)
   }, [lessonId, startLesson])
 
-  const handleSelectAnswer = (optionId) => {
+  const handleSelectAnswer = (answer) => {
     if (showFeedback) return
-    setSelectedAnswer(optionId)
+    setSelectedAnswer(answer)
+  }
+
+  const checkAnswer = (challenge, answer) => {
+    switch (challenge.type) {
+      case 'multiple-choice':
+        const option = challenge.options.find((o) => o.id === answer)
+        return option?.correct || false
+
+      case 'true-false':
+        return challenge.isTrue === (answer === 'true')
+
+      case 'fill-in-blank':
+        const acceptableAnswers = [
+          challenge.answer.toLowerCase(),
+          ...(challenge.acceptableAnswers || []).map((a) => a.toLowerCase()),
+        ]
+        return acceptableAnswers.includes(answer?.toLowerCase())
+
+      case 'matching':
+        return answer === 'correct'
+
+      default:
+        return false
+    }
   }
 
   const handleCheckAnswer = () => {
-    const option = currentChallenge.options.find((o) => o.id === selectedAnswer)
-    const correct = option?.correct || false
-    
+    const correct = checkAnswer(currentChallenge, selectedAnswer)
+
     setIsCorrect(correct)
     setShowFeedback(true)
-    
+
     // Play sound
     soundManager.play(correct ? 'correct' : 'wrong')
-    
+
     // Update progress
     completeChallenge(currentChallenge.id, correct)
-    
+
     if (!correct) {
       loseHeart()
     }
@@ -125,14 +177,14 @@ export default function LessonScreen() {
       setLessonResults(results)
       const xpEarned = 50 + (results?.isPerfect ? 25 : 0)
       addXP(xpEarned)
-      
+
       // Celebration
       if (results?.isPerfect) {
         celebratePerfectLesson()
       } else {
         celebrateLessonComplete()
       }
-      
+
       soundManager.play('lessonComplete')
       setLessonComplete(true)
     }
@@ -147,12 +199,66 @@ export default function LessonScreen() {
     navigate('/learn')
   }
 
+  // Check if answer is ready to check
+  const canCheck = () => {
+    if (!selectedAnswer) return false
+    // Matching challenge auto-submits when complete
+    if (currentChallenge.type === 'matching') return false
+    return true
+  }
+
+  // Render the appropriate challenge component
+  const renderChallenge = () => {
+    const commonProps = {
+      challenge: currentChallenge,
+      selectedAnswer,
+      showFeedback,
+      isCorrect,
+      onSelectAnswer: handleSelectAnswer,
+    }
+
+    switch (currentChallenge.type) {
+      case 'multiple-choice':
+        return <MultipleChoiceChallenge {...commonProps} />
+
+      case 'true-false':
+        return <TrueFalseChallenge {...commonProps} />
+
+      case 'matching':
+        return (
+          <MatchingChallenge
+            {...commonProps}
+            onSelectAnswer={(result) => {
+              setSelectedAnswer(result)
+              // Auto-check when matching is complete
+              if (result === 'correct' || result === 'incorrect') {
+                setTimeout(() => {
+                  const correct = result === 'correct'
+                  setIsCorrect(correct)
+                  setShowFeedback(true)
+                  soundManager.play(correct ? 'correct' : 'wrong')
+                  completeChallenge(currentChallenge.id, correct)
+                  if (!correct) loseHeart()
+                }, 300)
+              }
+            }}
+          />
+        )
+
+      case 'fill-in-blank':
+        return <FillInBlankChallenge {...commonProps} />
+
+      default:
+        return <MultipleChoiceChallenge {...commonProps} />
+    }
+  }
+
   // No hearts left
   if (hearts === 0 && !lessonComplete) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6">
         <Mascot state="disappointed" size="lg" message="You're out of hearts!" />
-        <p className="text-gray-600 mt-4 mb-6 text-center">
+        <p className="text-gray-600 dark:text-gray-400 mt-4 mb-6 text-center">
           Wait for hearts to regenerate or practice old lessons to earn more.
         </p>
         <Button onClick={() => navigate('/')}>Go Home</Button>
@@ -166,7 +272,7 @@ export default function LessonScreen() {
     const isPerfect = progress?.wrongAnswers === 0
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white dark:from-primary-900/30 dark:to-gray-900 flex flex-col items-center justify-center p-6">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -175,7 +281,7 @@ export default function LessonScreen() {
           <Mascot
             state={isPerfect ? 'cheering' : 'happy'}
             size="xl"
-            message={isPerfect ? 'Perfect! 🌟' : 'Great job! 🎉'}
+            message={isPerfect ? 'Perfect!' : 'Great job!'}
           />
         </motion.div>
 
@@ -185,23 +291,23 @@ export default function LessonScreen() {
           transition={{ delay: 0.3 }}
           className="text-center mt-8"
         >
-          <h1 className="text-3xl font-extrabold text-gray-800 mb-2">
+          <h1 className="text-3xl font-extrabold text-gray-800 dark:text-gray-100 mb-2">
             Lesson Complete!
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
             You earned {50 + (isPerfect ? 25 : 0)} XP
           </p>
 
           <Card className="mb-6 text-left">
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-gray-600">Correct answers</span>
+                <span className="text-gray-600 dark:text-gray-400">Correct answers</span>
                 <span className="font-bold text-green-600">
                   {progress?.correctAnswers || 0}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Wrong answers</span>
+                <span className="text-gray-600 dark:text-gray-400">Wrong answers</span>
                 <span className="font-bold text-red-500">
                   {progress?.wrongAnswers || 0}
                 </span>
@@ -224,7 +330,7 @@ export default function LessonScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <LessonTopBar
         progress={currentIndex + (showFeedback ? 1 : 0)}
         total={totalChallenges}
@@ -241,59 +347,12 @@ export default function LessonScreen() {
             exit={{ opacity: 0, x: -50 }}
             className="flex-1"
           >
-            <h2 className="text-xl font-bold text-gray-800 mb-6">
-              {currentChallenge.question}
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+              {currentChallenge.question || currentChallenge.statement}
             </h2>
 
-            {/* Options */}
-            <div className="space-y-3">
-              {currentChallenge.options.map((option) => {
-                const isSelected = selectedAnswer === option.id
-                const showResult = showFeedback && isSelected
-                const showCorrectHint = showFeedback && option.correct && !isSelected
-
-                return (
-                  <motion.button
-                    key={option.id}
-                    onClick={() => handleSelectAnswer(option.id)}
-                    disabled={showFeedback}
-                    className={cn(
-                      'w-full p-4 rounded-xl text-left transition-all duration-200',
-                      // Result states
-                      showResult && option.correct && 'border-2 border-green-500 bg-green-50 shadow-md',
-                      showResult && !option.correct && 'border-2 border-red-400 bg-red-50',
-                      showCorrectHint && 'border-2 border-green-300 bg-green-50/50',
-                      // Selected state
-                      isSelected && !showFeedback && 'border-[3px] border-primary-500 bg-primary-50 shadow-md',
-                      // Default state
-                      !isSelected && !showFeedback && 'border-2 border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm',
-                      // Disabled non-selected during feedback
-                      showFeedback && !isSelected && !showCorrectHint && 'opacity-50'
-                    )}
-                    whileTap={!showFeedback ? { scale: 0.98 } : {}}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{option.text}</span>
-                      {showResult && option.correct && (
-                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                          <Check className="w-4 h-4 text-white" />
-                        </div>
-                      )}
-                      {showResult && !option.correct && (
-                        <div className="w-6 h-6 rounded-full bg-red-400 flex items-center justify-center">
-                          <X className="w-4 h-4 text-white" />
-                        </div>
-                      )}
-                      {showCorrectHint && (
-                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                          <Check className="w-4 h-4 text-white" />
-                        </div>
-                      )}
-                    </div>
-                  </motion.button>
-                )
-              })}
-            </div>
+            {/* Challenge Component */}
+            {renderChallenge()}
 
             {/* Feedback */}
             <AnimatePresence>
@@ -304,8 +363,8 @@ export default function LessonScreen() {
                   className={cn(
                     'mt-6 p-4 rounded-xl border-l-4',
                     isCorrect
-                      ? 'bg-green-50 border-green-500'
-                      : 'bg-red-50 border-red-400'
+                      ? 'bg-green-50 dark:bg-green-900/30 border-green-500'
+                      : 'bg-red-50 dark:bg-red-900/30 border-red-400'
                   )}
                 >
                   <div className="flex items-start gap-3">
@@ -322,13 +381,13 @@ export default function LessonScreen() {
                     <div>
                       <p className={cn(
                         'font-semibold mb-1',
-                        isCorrect ? 'text-green-800' : 'text-red-800'
+                        isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'
                       )}>
                         {isCorrect ? 'Correct!' : 'Not quite'}
                       </p>
                       <p className={cn(
                         'text-sm',
-                        isCorrect ? 'text-green-700' : 'text-red-700'
+                        isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
                       )}>
                         {isCorrect
                           ? currentChallenge.feedback.correct
@@ -348,7 +407,7 @@ export default function LessonScreen() {
             <Button
               size="lg"
               fullWidth
-              disabled={!selectedAnswer}
+              disabled={!canCheck()}
               onClick={handleCheckAnswer}
             >
               Check

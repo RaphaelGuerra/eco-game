@@ -73,7 +73,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col">
       {/* Progress dots */}
       <div className="flex justify-center gap-2 pt-8 pb-4">
         {STEPS.map((_, index) => (
@@ -84,7 +84,7 @@ export default function Onboarding() {
                 ? 'bg-primary-500'
                 : index < currentStep
                 ? 'bg-primary-300'
-                : 'bg-gray-200'
+                : 'bg-gray-200 dark:bg-gray-600'
             }`}
             animate={{ scale: index === currentStep ? 1.2 : 1 }}
           />
@@ -114,7 +114,7 @@ export default function Onboarding() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-2xl font-extrabold text-gray-800 mt-8 mb-3"
+              className="text-2xl font-extrabold text-gray-800 dark:text-gray-100 mt-8 mb-3"
             >
               {step.title}
             </motion.h1>
@@ -123,7 +123,7 @@ export default function Onboarding() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-gray-600 mb-8"
+              className="text-gray-600 dark:text-gray-300 mb-8"
             >
               {step.description}
             </motion.p>
@@ -142,18 +142,18 @@ export default function Onboarding() {
                     onClick={() => setSelectedGoal(index)}
                     className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
                       selectedGoal === index
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30'
+                        : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500'
                     }`}
                   >
                     <span className="text-2xl">{goal.icon}</span>
                     <div className="flex-1 text-left">
-                      <p className="font-bold text-gray-800">{goal.label}</p>
-                      <p className="text-sm text-gray-500">{goal.description}</p>
+                      <p className="font-bold text-gray-800 dark:text-gray-100">{goal.label}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{goal.description}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary-600">{goal.xp} XP</p>
-                      <p className="text-xs text-gray-400">daily goal</p>
+                      <p className="font-bold text-primary-600 dark:text-primary-400">{goal.xp} XP</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">daily goal</p>
                     </div>
                   </button>
                 ))}
@@ -202,11 +202,11 @@ export default function Onboarding() {
 
 function FeatureCard({ icon, label }) {
   return (
-    <div className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl shadow-sm">
-      <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600">
+    <div className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+      <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400">
         {icon}
       </div>
-      <span className="text-sm font-medium text-gray-700">{label}</span>
+      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
     </div>
   )
 }

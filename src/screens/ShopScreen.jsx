@@ -111,10 +111,10 @@ export default function ShopScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       <TopBar
         centerContent={
-          <h1 className="text-lg font-bold text-gray-800">Shop</h1>
+          <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">Shop</h1>
         }
       />
 
@@ -124,10 +124,10 @@ export default function ShopScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-100">
+          <Card className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/30 dark:to-blue-900/30 border border-cyan-100 dark:border-cyan-800">
             <div>
-              <p className="text-sm text-gray-500">Your Balance</p>
-              <p className="text-3xl font-extrabold text-cyan-600">
+              <p className="text-sm text-gray-500 dark:text-gray-400">Your Balance</p>
+              <p className="text-3xl font-extrabold text-cyan-600 dark:text-cyan-400">
                 {gems.toLocaleString()}
               </p>
             </div>
@@ -149,7 +149,7 @@ export default function ShopScreen() {
         >
           <div className="flex items-center gap-2 mb-3">
             <Zap className="w-5 h-5 text-amber-500" />
-            <h2 className="text-lg font-bold text-gray-800">Power-ups</h2>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">Power-ups</h2>
           </div>
           <div className="space-y-3">
             {SHOP_ITEMS.filter((item) => item.category === 'power-ups').map(
@@ -174,11 +174,11 @@ export default function ShopScreen() {
         >
           <div className="flex items-center gap-2 mb-3">
             <Package className="w-5 h-5 text-purple-500" />
-            <h2 className="text-lg font-bold text-gray-800">Bundles</h2>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">Bundles</h2>
             <Badge variant="purple" size="xs">Save more</Badge>
           </div>
-          <Card className="bg-gradient-to-br from-purple-50 to-white border border-purple-100 p-0 overflow-hidden">
-            <div className="divide-y divide-purple-100">
+          <Card className="bg-gradient-to-br from-purple-50 to-white dark:from-purple-900/30 dark:to-gray-800 border border-purple-100 dark:border-purple-800 p-0 overflow-hidden">
+            <div className="divide-y divide-purple-100 dark:divide-purple-800">
               {SHOP_ITEMS.filter((item) => item.category === 'bundles').map(
                 (item) => (
                   <ShopItem
@@ -200,10 +200,10 @@ export default function ShopScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="text-center py-8 bg-gray-100">
-            <Sparkles className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-500 font-medium">More items coming soon!</p>
-            <p className="text-sm text-gray-400">
+          <Card className="text-center py-8 bg-gray-100 dark:bg-gray-800">
+            <Sparkles className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+            <p className="text-gray-500 dark:text-gray-400 font-medium">More items coming soon!</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">
               Cosmetics, themes, and more
             </p>
           </Card>
@@ -237,9 +237,9 @@ function ShopItem({ item, canAfford, onPurchase, isBundle, isActive }) {
     <div
       className={cn(
         'flex items-center gap-4 p-4',
-        !isBundle && 'bg-white rounded-xl shadow-game',
-        !canAfford && !isActive && 'bg-gray-50',
-        isActive && 'bg-amber-50 border border-amber-200 rounded-xl'
+        !isBundle && 'bg-white dark:bg-gray-800 rounded-xl shadow-game',
+        !canAfford && !isActive && 'bg-gray-50 dark:bg-gray-800/50',
+        isActive && 'bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-xl'
       )}
     >
       <div
@@ -261,11 +261,11 @@ function ShopItem({ item, canAfford, onPurchase, isBundle, isActive }) {
       <div className="flex-1">
         <h3 className={cn(
           'font-bold',
-          canAfford || isActive ? 'text-gray-800' : 'text-gray-500'
+          canAfford || isActive ? 'text-gray-800 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'
         )}>{item.name}</h3>
         <p className={cn(
           'text-sm',
-          canAfford || isActive ? 'text-gray-500' : 'text-gray-400'
+          canAfford || isActive ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'
         )}>
           {isActive ? 'Active! Earning 2x XP' : item.description}
         </p>

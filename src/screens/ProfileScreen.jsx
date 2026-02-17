@@ -33,14 +33,14 @@ export default function ProfileScreen() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       <TopBar
         rightContent={
           <button
             onClick={() => navigate('/settings')}
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <Settings className="w-5 h-5 text-gray-500" />
+            <Settings className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         }
       />
@@ -53,7 +53,7 @@ export default function ProfileScreen() {
           className="text-center"
         >
           <Mascot state="happy" size="lg" />
-          <h1 className="text-2xl font-extrabold text-gray-800 mt-4">
+          <h1 className="text-2xl font-extrabold text-gray-800 dark:text-gray-100 mt-4">
             Eco Explorer
           </h1>
           <div className="flex items-center justify-center gap-2 mt-1">
@@ -84,17 +84,17 @@ export default function ProfileScreen() {
         >
           {stats.map((stat, index) => (
             <Card key={stat.label} className="text-center py-5">
-              <div className={`w-10 h-10 mx-auto mb-3 rounded-xl bg-gray-50 flex items-center justify-center`}>
+              <div className={`w-10 h-10 mx-auto mb-3 rounded-xl bg-gray-50 dark:bg-gray-700 flex items-center justify-center`}>
                 <stat.icon className={`w-5 h-5 ${stat.color}`} />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-              <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+              <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">{stat.value}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
             </Card>
           ))}
         </motion.div>
 
         {/* Section Divider */}
-        <div className="border-t border-gray-100" />
+        <div className="border-t border-gray-100 dark:border-gray-800" />
 
         {/* Achievements Preview */}
         <motion.div
@@ -112,8 +112,8 @@ export default function ProfileScreen() {
                 <Trophy className="w-6 h-6 text-amber-500" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-800">Achievements</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-bold text-gray-800 dark:text-gray-100">Achievements</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {getUnlockedCount()} / {getTotalCount()} unlocked
                 </p>
               </div>
@@ -140,8 +140,8 @@ export default function ProfileScreen() {
                 <Search className="w-6 h-6 text-primary-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-800">Discoveries</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-bold text-gray-800 dark:text-gray-100">Discoveries</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {getUniqueDiscoveryCount()} species found
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function ProfileScreen() {
         </motion.div>
 
         {/* Section Divider */}
-        <div className="border-t border-gray-100" />
+        <div className="border-t border-gray-100 dark:border-gray-800" />
 
         {/* Quick Stats */}
         <motion.div
@@ -179,9 +179,9 @@ export default function ProfileScreen() {
 
 function StatRow({ label, value, icon: Icon, iconColor }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-      <span className="text-gray-600">{label}</span>
-      <span className="font-bold text-gray-800 flex items-center gap-1">
+    <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+      <span className="text-gray-600 dark:text-gray-400">{label}</span>
+      <span className="font-bold text-gray-800 dark:text-gray-100 flex items-center gap-1">
         {Icon && <Icon className={`w-4 h-4 ${iconColor || 'text-gray-500'}`} />}
         {value}
       </span>

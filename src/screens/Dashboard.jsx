@@ -39,7 +39,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       <TopBar />
 
       <main className="px-4 py-6 max-w-lg mx-auto space-y-6">
@@ -85,7 +85,7 @@ export default function Dashboard() {
           {/* Explore Button */}
           <Card
             interactive
-            className="flex flex-col items-center justify-center py-6 min-h-[140px] bg-gradient-to-br from-primary-50 to-secondary-50 border border-primary-100"
+            className="flex flex-col items-center justify-center py-6 min-h-[140px] bg-gradient-to-br from-primary-50 to-secondary-50 border border-primary-100 dark:from-primary-900/30 dark:to-secondary-900/30 dark:border-primary-800"
             onClick={() => navigate('/explore')}
           >
             <motion.div
@@ -102,13 +102,13 @@ export default function Dashboard() {
             >
               <Compass className="w-7 h-7 text-white" />
             </motion.div>
-            <span className="font-bold text-gray-700">Explore</span>
-            <span className="text-xs text-gray-500">Discover wildlife</span>
+            <span className="font-bold text-gray-700 dark:text-gray-200">Explore</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">Discover wildlife</span>
           </Card>
         </motion.div>
 
         {/* Section Divider */}
-        <div className="border-t border-gray-100" />
+        <div className="border-t border-gray-100 dark:border-gray-800" />
 
         {/* Continue Learning */}
         <motion.div
@@ -126,18 +126,18 @@ export default function Dashboard() {
                 <BookOpen className="w-6 h-6 text-secondary-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-800">Continue Learning</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-bold text-gray-800 dark:text-gray-100">Continue Learning</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   Welcome to Paradise • Lesson 1
                 </p>
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-gray-400" />
+            <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           </Card>
         </motion.div>
 
         {/* Section Divider */}
-        <div className="border-t border-gray-100" />
+        <div className="border-t border-gray-100 dark:border-gray-800" />
 
         {/* Quick Actions */}
         <motion.div
@@ -185,7 +185,7 @@ function QuickActionCard({ icon: Icon, iconColor, iconBg, label, onClick }) {
       <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center mb-2', iconBg)}>
         <Icon className={cn('w-5 h-5', iconColor)} />
       </div>
-      <span className="text-xs font-medium text-gray-600">{label}</span>
+      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{label}</span>
     </Card>
   )
 }

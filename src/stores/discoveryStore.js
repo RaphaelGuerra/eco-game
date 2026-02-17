@@ -39,6 +39,9 @@ export const useDiscoveryStore = create(
       // Discovered species/items
       discoveries: [], // { speciesId, discoveredAt, rarity, encounterConditions }
 
+      // Favorite species
+      favorites: [],
+
       // Current environmental conditions
       timeOfDay: calculateTimeOfDay(),
       weather: 'clear',
@@ -160,6 +163,27 @@ export const useDiscoveryStore = create(
         return get().discoveries.find((d) => d.speciesId === speciesId)
       },
 
+      // Toggle favorite status for a species
+      toggleFavorite: (speciesId) => {
+        const state = get()
+        const isFav = state.favorites.includes(speciesId)
+        if (isFav) {
+          set({ favorites: state.favorites.filter((id) => id !== speciesId) })
+        } else {
+          set({ favorites: [...state.favorites, speciesId] })
+        }
+      },
+
+      // Check if a species is favorited
+      isFavorite: (speciesId) => {
+        return get().favorites.includes(speciesId)
+      },
+
+      // Get all favorite species IDs
+      getFavorites: () => {
+        return get().favorites
+      },
+
       // Get all unique discoveries
       getUniqueDiscoveries: () => {
         const state = get()
@@ -191,6 +215,7 @@ export const useDiscoveryStore = create(
       resetProgress: () => {
         set({
           discoveries: [],
+          favorites: [],
           timeOfDay: calculateTimeOfDay(),
           weather: 'clear',
           lastExploreTime: null,
@@ -215,6 +240,7 @@ export const useDiscoveryStore = create(
         lastExploreTime: state.lastExploreTime,
         totalExplorations: state.totalExplorations,
         rarityCounts: state.rarityCounts,
+        favorites: state.favorites,
       }),
     }
   )

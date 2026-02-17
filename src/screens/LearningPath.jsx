@@ -86,11 +86,11 @@ export default function LearningPath() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       <TopBar />
 
       <main className="px-4 py-6 max-w-lg mx-auto">
-        <h1 className="text-2xl font-extrabold text-gray-800 mb-6">
+        <h1 className="text-2xl font-extrabold text-gray-800 dark:text-gray-100 mb-6">
           Learning Path
         </h1>
 
@@ -112,7 +112,7 @@ export default function LearningPath() {
                 <Card
                   className={cn(
                     'mb-4 transition-all duration-200',
-                    unitStatus === 'locked' && 'bg-gray-50',
+                    unitStatus === 'locked' && 'bg-gray-50 dark:bg-gray-800/50',
                     unitStatus !== 'locked' && 'hover:shadow-game-md'
                   )}
                 >
@@ -131,7 +131,7 @@ export default function LearningPath() {
                       <div className="flex items-center gap-2">
                         <h2 className={cn(
                           'font-bold',
-                          unitStatus === 'locked' ? 'text-gray-500' : 'text-gray-800'
+                          unitStatus === 'locked' ? 'text-gray-500 dark:text-gray-500' : 'text-gray-800 dark:text-gray-100'
                         )}>{unit.title}</h2>
                         {unitStatus === 'locked' && (
                           <Lock className="w-4 h-4 text-gray-400" />
@@ -144,11 +144,11 @@ export default function LearningPath() {
                       </div>
                       <p className={cn(
                         'text-sm',
-                        unitStatus === 'locked' ? 'text-gray-400' : 'text-gray-500'
+                        unitStatus === 'locked' ? 'text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'
                       )}>{unit.description}</p>
                       {/* Progress indicator */}
                       <div className="flex items-center gap-2 mt-2">
-                        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-primary-400 to-primary-500 rounded-full transition-all duration-300"
                             style={{ width: `${(completedCount / unit.lessons.length) * 100}%` }}
@@ -156,7 +156,7 @@ export default function LearningPath() {
                         </div>
                         <span className={cn(
                           'text-xs font-medium',
-                          unitStatus === 'locked' ? 'text-gray-400' : 'text-gray-500'
+                          unitStatus === 'locked' ? 'text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'
                         )}>
                           {completedCount}/{unit.lessons.length}
                         </span>
@@ -173,7 +173,7 @@ export default function LearningPath() {
                       className="absolute top-0 left-0 w-full bg-gradient-to-b from-primary-400 to-primary-200 transition-all duration-500"
                       style={{ height: `${(completedCount / unit.lessons.length) * 100}%` }}
                     />
-                    <div className="absolute top-0 left-0 w-full h-full bg-gray-200 -z-10" />
+                    <div className="absolute top-0 left-0 w-full h-full bg-gray-200 dark:bg-gray-700 -z-10" />
                   </div>
 
                   <div className="space-y-3">
@@ -213,21 +213,21 @@ export default function LearningPath() {
 
 function LessonNode({ lesson, status, onClick }) {
   const statusStyles = {
-    locked: 'bg-gray-50 border-gray-200 text-gray-400',
-    current: 'bg-primary-50 border-primary-300 text-primary-700 shadow-sm',
-    completed: 'bg-green-50 border-green-200 text-green-700',
+    locked: 'bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500',
+    current: 'bg-primary-50 dark:bg-primary-900/30 border-primary-300 dark:border-primary-700 text-primary-700 dark:text-primary-300 shadow-sm',
+    completed: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300',
   }
 
   const nodeStyles = {
-    locked: 'bg-gray-200 border-gray-300',
+    locked: 'bg-gray-200 dark:bg-gray-600 border-gray-300 dark:border-gray-500',
     current: 'bg-primary-500 border-primary-600 shadow-primary',
     completed: 'bg-green-500 border-green-600',
   }
 
   const hoverStyles = {
     locked: '',
-    current: 'hover:shadow-md hover:border-primary-400 hover:bg-primary-100',
-    completed: 'hover:shadow-md hover:border-green-300 hover:bg-green-100',
+    current: 'hover:shadow-md hover:border-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/50',
+    completed: 'hover:shadow-md hover:border-green-300 hover:bg-green-100 dark:hover:bg-green-900/50',
   }
 
   return (

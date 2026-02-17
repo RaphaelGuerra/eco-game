@@ -22,10 +22,10 @@ const LeaderboardScreen = lazy(() => import('@/screens/LeaderboardScreen'))
 // Loading fallback
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin" />
-        <p className="text-gray-500 font-medium">Loading...</p>
+        <div className="w-12 h-12 border-4 border-primary-200 dark:border-primary-800 border-t-primary-500 rounded-full animate-spin" />
+        <p className="text-gray-500 dark:text-gray-400 font-medium">Loading...</p>
       </div>
     </div>
   )
@@ -52,6 +52,7 @@ export default function App() {
   const soundEnabled = useSettingsStore((state) => state.soundEnabled)
   const soundVolume = useSettingsStore((state) => state.soundVolume)
   const reducedMotion = useSettingsStore((state) => state.reducedMotion)
+  const theme = useSettingsStore((state) => state.theme)
 
   // Initialize app on mount
   useEffect(() => {
@@ -93,6 +94,28 @@ export default function App() {
       document.documentElement.classList.remove('reduce-motion')
     }
   }, [reducedMotion])
+
+  // Apply theme preference to document
+  useEffect(() => {
+    const applyTheme = (isDark) => {
+      if (isDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      applyTheme(mediaQuery.matches)
+
+      const handler = (e) => applyTheme(e.matches)
+      mediaQuery.addEventListener('change', handler)
+      return () => mediaQuery.removeEventListener('change', handler)
+    } else {
+      applyTheme(theme === 'dark')
+    }
+  }, [theme])
 
   return (
     <BrowserRouter>

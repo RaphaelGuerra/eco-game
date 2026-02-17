@@ -6,11 +6,11 @@ import { Card, Badge } from '@/components/ui'
 import { TopBar, BottomNav } from '@/components/layout'
 
 const CATEGORY_CONFIG = {
-  streak: { label: 'Streak', icon: Flame, color: 'text-orange-500', bg: 'bg-orange-100' },
-  learning: { label: 'Learning', icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-100' },
-  discovery: { label: 'Discovery', icon: Search, color: 'text-green-500', bg: 'bg-green-100' },
-  progress: { label: 'Progress', icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-100' },
-  special: { label: 'Special', icon: Star, color: 'text-amber-500', bg: 'bg-amber-100' },
+  streak: { label: 'Streak', icon: Flame, color: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/30' },
+  learning: { label: 'Learning', icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/30' },
+  discovery: { label: 'Discovery', icon: Search, color: 'text-green-500', bg: 'bg-green-100 dark:bg-green-900/30' },
+  progress: { label: 'Progress', icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-100 dark:bg-purple-900/30' },
+  special: { label: 'Special', icon: Star, color: 'text-amber-500', bg: 'bg-amber-100 dark:bg-amber-900/30' },
 }
 
 export default function AchievementsScreen() {
@@ -39,10 +39,10 @@ export default function AchievementsScreen() {
   const completionPercentage = Math.round((unlockedCount / totalCount) * 100)
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
       <TopBar
         centerContent={
-          <h1 className="text-lg font-bold text-gray-800">Achievements</h1>
+          <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">Achievements</h1>
         }
       />
 
@@ -52,17 +52,17 @@ export default function AchievementsScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="text-center bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-100">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-amber-100 flex items-center justify-center">
+          <Card className="text-center bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 border border-amber-100 dark:border-amber-800">
+            <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
               <Trophy className="w-8 h-8 text-amber-500" />
             </div>
-            <h2 className="text-2xl font-extrabold text-gray-800">
+            <h2 className="text-2xl font-extrabold text-gray-800 dark:text-gray-100">
               {unlockedCount} / {totalCount}
             </h2>
-            <p className="text-gray-500">Achievements Unlocked</p>
+            <p className="text-gray-500 dark:text-gray-400">Achievements Unlocked</p>
 
             {/* Progress bar */}
-            <div className="mt-4 h-3 bg-white/50 rounded-full overflow-hidden shadow-inner">
+            <div className="mt-4 h-3 bg-white/50 dark:bg-gray-700/50 rounded-full overflow-hidden shadow-inner">
               <motion.div
                 className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"
                 initial={{ width: 0 }}
@@ -70,7 +70,7 @@ export default function AchievementsScreen() {
                 transition={{ duration: 0.5, delay: 0.2 }}
               />
             </div>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               {completionPercentage}% complete
             </p>
           </Card>
@@ -93,7 +93,7 @@ export default function AchievementsScreen() {
                 className={`flex-shrink-0 px-4 py-2 rounded-full font-medium text-sm transition-all ${
                   isSelected
                     ? 'bg-primary-500 text-white shadow-md'
-                    : 'bg-white text-gray-600 hover:bg-gray-100'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 {cat === 'all' ? 'All' : config?.label}
@@ -146,15 +146,15 @@ function AchievementCard({ achievement, unlocked, unlockedDate, categoryConfig }
   return (
     <Card
       className={`flex items-center gap-4 transition-all ${
-        !unlocked ? 'bg-gray-50' : ''
+        !unlocked ? 'bg-gray-50 dark:bg-gray-800/50' : ''
       }`}
     >
       {/* Icon */}
       <div
         className={`relative w-14 h-14 rounded-xl flex items-center justify-center text-2xl ${
           unlocked
-            ? categoryConfig?.bg || 'bg-gray-100'
-            : 'bg-gray-200 grayscale'
+            ? categoryConfig?.bg || 'bg-gray-100 dark:bg-gray-700'
+            : 'bg-gray-200 dark:bg-gray-700 grayscale'
         }`}
       >
         {unlocked ? (
@@ -174,7 +174,7 @@ function AchievementCard({ achievement, unlocked, unlockedDate, categoryConfig }
         <div className="flex items-center gap-2">
           <h3
             className={`font-bold truncate ${
-              unlocked ? 'text-gray-800' : 'text-gray-500'
+              unlocked ? 'text-gray-800 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'
             }`}
           >
             {achievement.title}
@@ -182,7 +182,7 @@ function AchievementCard({ achievement, unlocked, unlockedDate, categoryConfig }
         </div>
         <p
           className={`text-sm ${
-            unlocked ? 'text-gray-500' : 'text-gray-400'
+            unlocked ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'
           }`}
         >
           {achievement.description}

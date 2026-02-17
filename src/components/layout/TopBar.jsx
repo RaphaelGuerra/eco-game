@@ -28,6 +28,7 @@ export default function TopBar({
     <header
       className={cn(
         'sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-100',
+        'dark:bg-gray-900/90 dark:border-gray-800',
         'safe-top',
         className
       )}
@@ -47,7 +48,7 @@ export default function TopBar({
           {centerContent || (
             <a
               href="https://www.itatiaiaresort.com.br/"
-              className="text-sm font-semibold tracking-wide text-gray-700 hover:text-primary-600 transition-colors"
+              className="text-sm font-semibold tracking-wide text-gray-700 hover:text-primary-600 transition-colors dark:text-gray-200 dark:hover:text-primary-400"
               aria-label="Itatiaia Resort website"
             >
               Itatiaia Resort
@@ -84,6 +85,7 @@ export function LessonTopBar({
     <header
       className={cn(
         'sticky top-0 z-30 bg-white border-b border-gray-100',
+        'dark:bg-gray-900 dark:border-gray-800',
         'safe-top',
         className
       )}
@@ -92,11 +94,11 @@ export function LessonTopBar({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
+          className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors dark:hover:bg-gray-800"
           aria-label="Exit lesson"
         >
           <svg
-            className="w-6 h-6 text-gray-400"
+            className="w-6 h-6 text-gray-400 dark:text-gray-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -111,7 +113,7 @@ export function LessonTopBar({
         </button>
 
         {/* Progress bar */}
-        <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-primary-500 rounded-full"
             initial={{ width: 0 }}

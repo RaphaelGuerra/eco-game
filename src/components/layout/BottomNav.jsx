@@ -21,6 +21,7 @@ export default function BottomNav({ className }) {
       className={cn(
         'fixed bottom-0 left-0 right-0 z-40',
         'bg-white border-t border-gray-200',
+        'dark:bg-gray-900 dark:border-gray-800',
         'safe-bottom',
         className
       )}
@@ -43,20 +44,20 @@ export default function BottomNav({ className }) {
                 <div
                   className={cn(
                     'p-1.5 rounded-xl transition-colors',
-                    isActive ? 'bg-primary-100' : 'bg-transparent'
+                    isActive ? 'bg-primary-100 dark:bg-primary-900/50' : 'bg-transparent'
                   )}
                 >
                   <Icon
                     className={cn(
                       'w-6 h-6 transition-colors',
-                      isActive ? 'text-primary-600' : 'text-gray-400'
+                      isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'
                     )}
                   />
                 </div>
                 <span
                   className={cn(
                     'text-xs font-medium transition-colors',
-                    isActive ? 'text-primary-600' : 'text-gray-400'
+                    isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'
                   )}
                 >
                   {item.label}
