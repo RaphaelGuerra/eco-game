@@ -24,6 +24,9 @@ Last updated: 2026-03-05
 - [📄 License](#license)
 <!-- TOC end -->
 
+[![Lint](https://github.com/RaphaelGuerra/eco-game/actions/workflows/lint.yml/badge.svg)](https://github.com/RaphaelGuerra/eco-game/actions/workflows/lint.yml)
+[![Security](https://github.com/RaphaelGuerra/eco-game/actions/workflows/security.yml/badge.svg)](https://github.com/RaphaelGuerra/eco-game/actions/workflows/security.yml)
+
 A Duolingo-style educational resort app built with React, featuring gamification mechanics, exploration-based discovery, and engaging learning experiences.
 
 ## ✨ Features
